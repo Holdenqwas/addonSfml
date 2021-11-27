@@ -1,8 +1,9 @@
 #include "Form.h"
 
+
 Button::Button() {
 
-}
+};
 
 void Button::setString(sf::String str) {
     text.setString(str);
@@ -10,7 +11,6 @@ void Button::setString(sf::String str) {
 
 void Button::setColor(sf::Color c) {
     text.setFillColor(c);
-    this->c;
 }
 
 void Button::setFont(sf::Font& fnt) {
@@ -28,9 +28,10 @@ void Button::setSize(int sz) {
 bool Button::process(sf::Event ev) {
     if (ev.type == sf::Event::MouseMoved) {
         bool flag = text.getGlobalBounds().contains(sf::Vector2f(ev.mouseMove.x, ev.mouseMove.y));
-        text.setFillColor(flag ? sf::Color::Yellow : c);
+        text.setFillColor(flag ? sf::Color::Yellow : this->c);
         return false;
     }
+
 
     if (ev.type == sf::Event::MouseButtonReleased) {
         bool flag = text.getGlobalBounds().contains(sf::Vector2f(ev.mouseButton.x, ev.mouseButton.y));

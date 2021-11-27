@@ -36,6 +36,7 @@ Backup/
 Debug/
 Release/
 .vs/
+.vscode/
 
 # VS files
 *.dsp
@@ -44,3 +45,4 @@ Release/
 *.vcxproj
 *.vcxproj.filters
 *.vcxproj.user
+*.run.sh.swp
