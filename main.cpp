@@ -3,20 +3,15 @@
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
+    sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
     
-    sf::Font font;
-	font.loadFromFile("/usr/share/fonts/truetype/ubuntu/Ubuntu-BI.ttf");
-
-    Button btn;
-    btn.setString("Hello");
-    btn.setColor(sf::Color::Blue);
-    btn.setFont(font);
+    Button btn("Anton");
     btn.setPosition(sf::Vector2f(30, 30));
-    //btn.setSize(20);
-  
+    Button btn2("Submit");
+    btn2.setPosition(sf::Vector2f(130, 30));
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -25,11 +20,13 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             btn.process(event);
+            btn2.process(event);
 
         }
 
-        window.clear();
+        window.clear(sf::Color::White);
         btn.render(window);
+        btn2.render(window);
         //window.draw(shape);
         window.display();
     }

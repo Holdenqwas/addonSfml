@@ -2,11 +2,13 @@
 #define FORM
 
 #include <SFML/Graphics.hpp>
+#include <string>
 
 class Button
 {
 public:
-    Button();
+    Button(std::string str = "", int size = 15, 
+            sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setColor(sf::Color c);
     void setFont(sf::Font &fnt);
@@ -17,7 +19,10 @@ public:
 
 private:
     sf::Text text;
+    sf::Font font; 
     sf::Color c;
+    sf::Texture texture;
+    sf::Sprite sprite;
 };
 
 #endif // !FORM
