@@ -7,10 +7,12 @@ int main()
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Green);
     
-    Button btn("Anton");
+    Button btn("input");
     btn.setPosition(sf::Vector2f(30, 30));
-    Button btn2("Submit");
-    btn2.setPosition(sf::Vector2f(130, 30));
+
+    TextEdit edit;
+    edit.setPosition(sf::Vector2f(130, 30));
+
 
     while (window.isOpen())
     {
@@ -20,13 +22,13 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
             btn.process(event);
-            btn2.process(event);
+            edit.process(event);
 
         }
 
         window.clear(sf::Color::White);
         btn.render(window);
-        btn2.render(window);
+        edit.render(window);
         //window.draw(shape);
         window.display();
     }
