@@ -1,8 +1,11 @@
 #ifndef FORM
 #define FORM
 
+//
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <vector>
+
 
 class Button
 {
@@ -46,7 +49,37 @@ private:
     sf::Color c;
     sf::Texture texture;
     sf::Sprite sprite;
+    sf::RectangleShape cursor;
     bool write = false;
 };
 
+class CheckBox
+{
+public:
+    CheckBox();
+    void setPosition(sf::Vector2f pos);
+    void process(sf::Event ev);
+    void render(sf::RenderWindow &wnd);
+
+private:
+    sf::ConvexShape check;
+    sf::RectangleShape rect;
+    bool state = false;
+};
+
+class RadioButton
+{
+public:
+    RadioButton(int count = 2);
+    ~RadioButton();
+    void setPosition(sf::Vector2f pos);
+    void process(sf::Event ev);
+    void render(sf::RenderWindow &wnd);
+
+private:
+    sf::CircleShape point;
+    std::vector<sf::CircleShape*> vector;
+    int state = 0;
+    int count;
+};
 #endif // !FORM
