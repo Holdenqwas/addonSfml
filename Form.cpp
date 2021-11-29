@@ -86,6 +86,7 @@ void Button::render(sf::RenderWindow &wnd)
 TextEdit::TextEdit(int wdth, int size,
                    sf::Color clr)
 {
+	sprite.setScale(wdth / 80);
     text.setCharacterSize(size);
     text.setFillColor(clr);
     c = clr;
@@ -99,6 +100,11 @@ TextEdit::TextEdit(int wdth, int size,
 void TextEdit::setString(sf::String str)
 {
     text.setString(str);
+}
+
+void TextEdit::setWidth(int wdth)
+{
+	sprite.setScale(wdth / 80);
 }
 
 void TextEdit::setColor(sf::Color color)
@@ -151,8 +157,11 @@ void TextEdit::process(sf::Event ev)
             }
             else if (ev.text.unicode < 128)
             {
-                textInput += ev.text.unicode;
-                text.setString(textInput);
+				if (text.getLocalBounds().width < sprite.getLocaleBounds().width - 10)
+				{
+					textInput += ev.text.unicode;
+					text.setString(textInput);
+				}
             }
         }
     }
@@ -162,4 +171,18 @@ void TextEdit::render(sf::RenderWindow &wnd)
 {
     wnd.draw(sprite);
     wnd.draw(text);
+}
+
+char* clipboard()
+{
+	char* fromClipboard;//в эту переменную сохраним текст из буфера обмена
+	if (OpenClipboard())//открываем буфер обмена
+	{
+		HANDLE hData = GetClipboardData(CF_TEXT);//извлекаем текст из буфера обмена
+		char* chBuffer = (char*)GlobalLock(hData);//блокируем память
+		fromClipboard = chBuffer;
+		GlobalUnlock(hData);//разблокируем память
+		CloseClipboard();//закрываем буфер обмена
+	}
+	return fromClipboard;
 }
