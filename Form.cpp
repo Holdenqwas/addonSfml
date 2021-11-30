@@ -86,12 +86,13 @@ void Button::render(sf::RenderWindow &wnd)
 TextEdit::TextEdit(int wdth, int size,
                    sf::Color clr)
 {
-    sprite.setScale(wdth / 80, 1);
+    rect = sf::RectangleShape(sf::Vector2f(wdth, 25));
+    rect.setFillColor(sf::Color::White);
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor(HOWER);
     text.setCharacterSize(size);
     text.setFillColor(clr);
     c = clr;
-    texture.loadFromFile("./resurses/TextEdit.png");
-    sprite.setTexture(texture);
     font.loadFromFile(
         "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
     text.setFont(font);
@@ -106,7 +107,7 @@ void TextEdit::setString(sf::String str)
 
 void TextEdit::setWidth(int wdth)
 {
-    sprite.setScale(wdth / 80, 1);
+    rect.setSize(sf::Vector2f(wdth, 25));
 }
 
 void TextEdit::setColor(sf::Color color)
@@ -123,7 +124,7 @@ void TextEdit::setFont(sf::Font &fnt)
 void TextEdit::setPosition(sf::Vector2f pos)
 {
     text.setPosition(sf::Vector2f(pos.x + 5, pos.y + 2));
-    sprite.setPosition(pos);
+    rect.setPosition(pos);
 }
 
 void TextEdit::setSize(int sz)
@@ -131,25 +132,25 @@ void TextEdit::setSize(int sz)
     text.setCharacterSize(sz);
 }
 
-void TextEdit::process(sf::Event ev)
+std::string TextEdit::process(sf::Event ev)
 {
     if (ev.type == sf::Event::MouseMoved)
     {
-        bool flag = sprite.getGlobalBounds()
+        bool flag = rect.getGlobalBounds()
                         .contains(sf::Vector2f(ev.mouseMove.x, ev.mouseMove.y));
 
-        sprite.setColor(flag ? HOWER : sf::Color(255, 255, 255, 255));
+        rect.setFillColor(flag ? HOWER : sf::Color(255, 255, 255, 255));
     }
 
     if (ev.type == sf::Event::MouseButtonReleased)
     {
-        write = sprite.getGlobalBounds()
+        write = rect.getGlobalBounds()
                     .contains(sf::Vector2f(ev.mouseButton.x, ev.mouseButton.y));
     }
 
     if (write)
     {
-        cursor.setPosition(text.getGlobalBounds().left + text.getLocalBounds().width + 3, sprite.getGlobalBounds().top + 4);
+        cursor.setPosition(text.getGlobalBounds().left + text.getLocalBounds().width + 3, rect.getGlobalBounds().top + 4);
         // cursor.setPosition(200, 50);
         if (ev.type == sf::Event::KeyPressed)
         {
@@ -168,7 +169,7 @@ void TextEdit::process(sf::Event ev)
             }
             else // if (ev.text.unicode < 128)
             {
-                if (text.getLocalBounds().width < sprite.getLocalBounds().width - 10)
+                if (text.getLocalBounds().width < rect.getLocalBounds().width - 10)
                 {
                     textInput += ev.text.unicode;
                     text.setString(textInput);
@@ -176,11 +177,12 @@ void TextEdit::process(sf::Event ev)
             }
         }
     }
+    return text.getString().operator std::string();
 }
 
 void TextEdit::render(sf::RenderWindow &wnd)
 {
-    wnd.draw(sprite);
+    wnd.draw(rect);
     wnd.draw(text);
     if (write)
         wnd.draw(cursor);
@@ -212,7 +214,7 @@ void CheckBox::setPosition(sf::Vector2f pos)
     rect.setPosition(pos);
 }
 
-void CheckBox::process(sf::Event ev)
+bool CheckBox::process(sf::Event ev)
 {
     if (ev.type == sf::Event::MouseMoved)
     {
@@ -229,6 +231,7 @@ void CheckBox::process(sf::Event ev)
         if (flag)
             state = !state;
     }
+    return state;
 }
 
 void CheckBox::render(sf::RenderWindow &wnd)
@@ -270,7 +273,7 @@ void RadioButton::setPosition(sf::Vector2f pos)
     point.setPosition(sf::Vector2f(pos.x + 2, pos.y + 2));
 }
 
-void RadioButton::process(sf::Event ev)
+int RadioButton::process(sf::Event ev)
 {
     if (ev.type == sf::Event::MouseMoved)
     {
@@ -300,6 +303,7 @@ void RadioButton::process(sf::Event ev)
             }
         }
     }
+    return state;
 }
 
 void RadioButton::render(sf::RenderWindow &wnd)
@@ -310,4 +314,26 @@ void RadioButton::render(sf::RenderWindow &wnd)
         wnd.draw(*vector[i]);
     }
     wnd.draw(point);
+}
+
+// Text
+
+Text::Text(std::string str, int size, sf::Color clr)
+{
+    text.setString(str);
+    text.setCharacterSize(size);
+    text.setFillColor(clr);
+    font.loadFromFile(
+        "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    text.setFont(font);
+}
+
+void Text::setPosition(sf::Vector2f pos)
+{
+    text.setPosition(pos);
+}
+
+void Text::render(sf::RenderWindow &wnd)
+{
+    wnd.draw(text);
 }

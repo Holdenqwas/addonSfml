@@ -39,7 +39,7 @@ public:
     void setFont(sf::Font &fnt);
     void setPosition(sf::Vector2f pos);
     void setSize(int sz);
-    void process(sf::Event ev);
+    std::string process(sf::Event ev);
     void render(sf::RenderWindow &wnd);
 
 private:
@@ -47,8 +47,7 @@ private:
     sf::Text text;
     sf::Font font; 
     sf::Color c;
-    sf::Texture texture;
-    sf::Sprite sprite;
+    sf::RectangleShape rect;
     sf::RectangleShape cursor;
     bool write = false;
 };
@@ -58,7 +57,7 @@ class CheckBox
 public:
     CheckBox();
     void setPosition(sf::Vector2f pos);
-    void process(sf::Event ev);
+    bool process(sf::Event ev);
     void render(sf::RenderWindow &wnd);
 
 private:
@@ -73,7 +72,7 @@ public:
     RadioButton(int count = 2);
     ~RadioButton();
     void setPosition(sf::Vector2f pos);
-    void process(sf::Event ev);
+    int process(sf::Event ev);
     void render(sf::RenderWindow &wnd);
 
 private:
@@ -81,5 +80,19 @@ private:
     std::vector<sf::CircleShape*> vector;
     int state = 0;
     int count;
+};
+
+class Text
+{
+public:
+    Text(std::string str = "", int size = 15, 
+            sf::Color clr = sf::Color::Black);
+    void setPosition(sf::Vector2f pos);
+    void render(sf::RenderWindow &wnd);
+
+private:
+    sf::String str;
+    sf::Text text;
+    sf::Font font;
 };
 #endif // !FORM
