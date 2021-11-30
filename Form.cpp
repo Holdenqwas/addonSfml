@@ -155,7 +155,10 @@ std::string TextEdit::process(sf::Event ev)
         if (ev.type == sf::Event::KeyPressed)
         {
             if (ev.key.control && ev.key.code == sf::Keyboard::V)
+            {
+                std::cout << sf::Clipboard::getString().toAnsiString() << std::endl;
                 text.setString(sf::Clipboard::getString());
+            }
         }
         else if (ev.type == sf::Event::TextEntered)
         {
