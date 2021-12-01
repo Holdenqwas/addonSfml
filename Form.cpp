@@ -340,3 +340,70 @@ void Text::render(sf::RenderWindow &wnd)
 {
     wnd.draw(text);
 }
+
+// ListText
+
+ListText::ListText(int hight, int width, int count)
+{
+    rect = sf::RectangleShape(sf::Vector2f(hight, width));
+    rect.setFillColor(sf::Color::White);
+    rect.setOutlineColor(HOWER);
+    rect.setOutlineThickness(1);
+}
+
+void ListText::setPosition(sf::Vector2f pos)
+{
+    rect.setPosition(pos);
+    addButton.setPosition(sf::Vector2f(pos.x, pos.y + rect.getLocalBounds().height + 10));
+    delButton.setPosition(sf::Vector2f(pos.x + 100, pos.y + rect.getLocalBounds().height + 10));
+}
+
+void ListText::process(sf::Event ev)
+{
+    if (addButton.process(ev))
+    {
+        add = true;
+    }
+    if (delButton.process(ev))
+    {
+        del = false;
+    }
+    if (add && ev.key.control && ev.key.code == sf::Keyboard::V)
+    {
+        str = sf::Clipboard::getString();
+        size_t pos = 0;
+        std::string delimiter = "\n";
+        std::string token;
+        while ((pos = str.find(delimiter)) != std::string::npos)
+        {
+            token = str.substr(0, pos);
+            arrStr.push_back(token);
+            vector.push_back(new Text(token));
+            str.erase(0, pos + delimiter.length());
+        }
+
+        for (int i = 0; i < vector.size(); i++)
+        {
+            vector[i]->setPosition(sf::Vector2f(rect.getGlobalBounds().left + 10, rect.getGlobalBounds().top + i * 25 + 5));
+        }
+        add = false;
+    }
+    if (del)
+    {
+        count = 0;
+        vector.clear();
+        str = "";
+        del = false;
+    }
+}
+
+void ListText::render(sf::RenderWindow &wnd)
+{
+    wnd.draw(rect);
+    for (int i = 0; i < vector.size(); i++)
+    {
+        vector[i]->render(wnd);
+    }
+    addButton.render(wnd);
+    delButton.render(wnd);
+}

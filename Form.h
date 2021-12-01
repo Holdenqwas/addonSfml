@@ -95,4 +95,24 @@ private:
     sf::Text text;
     sf::Font font;
 };
+
+class ListText
+{
+public:
+    ListText(int hight, int width, int count);
+    void setPosition(sf::Vector2f pos);
+    void process(sf::Event ev);
+    void render(sf::RenderWindow &wnd);
+
+private:
+    bool del = false;
+    bool add = false;
+    int count = 0;
+    std::string str;
+    std::vector <std::string> arrStr;
+    sf::RectangleShape rect;
+    std::vector <Text*> vector;
+    Button addButton = Button("Add");
+    Button delButton = Button("Delete all");
+};
 #endif // !FORM
