@@ -4,7 +4,8 @@
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(700, 700), "Autoreload");
-
+    window.setFramerateLimit(30);
+/*
     Button btn("Старт");
     btn.setPosition(sf::Vector2f(600, 600));
 
@@ -16,7 +17,7 @@ int main()
 
     RadioButton radio(5);
     radio.setPosition(sf::Vector2f(30, 150));
-
+*/
     ListText list(200, 200, 5);
     list.setPosition(sf::Vector2f(30, 190));
 

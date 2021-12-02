@@ -343,19 +343,22 @@ void Text::render(sf::RenderWindow &wnd)
 
 // ListText
 
-ListText::ListText(int hight, int width, int count)
+ListText::ListText(int hight, int width, int cnt)
 {
     rect = sf::RectangleShape(sf::Vector2f(hight, width));
     rect.setFillColor(sf::Color::White);
     rect.setOutlineColor(HOWER);
     rect.setOutlineThickness(1);
+    count = cnt;
 }
 
 void ListText::setPosition(sf::Vector2f pos)
 {
     rect.setPosition(pos);
-    addButton.setPosition(sf::Vector2f(pos.x, pos.y + rect.getLocalBounds().height + 10));
-    delButton.setPosition(sf::Vector2f(pos.x + 100, pos.y + rect.getLocalBounds().height + 10));
+    prevButton.setPosition(sf::Vector2f(pos.x, pos.y + rect.getLocalBounds().height + 10));
+    nextButton.setPosition(sf::Vector2f(pos.x + 90, pos.y + rect.getLocalBounds().height + 10));
+    addButton.setPosition(sf::Vector2f(pos.x + 180, pos.y + rect.getLocalBounds().height + 10));
+    delButton.setPosition(sf::Vector2f(pos.x + 270, pos.y + rect.getLocalBounds().height + 10));
 }
 
 void ListText::process(sf::Event ev)
@@ -366,7 +369,41 @@ void ListText::process(sf::Event ev)
     }
     if (delButton.process(ev))
     {
-        del = false;
+        del = true;
+    }
+    if (prevButton.process(ev))
+    {
+        for (int i = 0; i < vector.size(); i++)
+        {
+            delete vector[i];
+        }
+        vector.clear();
+
+        for (size_t i = curr--; vector.size() < count && curr >= 0; i--, curr--)
+        {
+            vector.insert(vector.begin(), new Text(arrStr[i]));
+        }
+        for (size_t i = 0; i < vector.size(); i++)
+        {
+            vector[i]->setPosition(sf::Vector2f(rect.getGlobalBounds().left + 10, rect.getGlobalBounds().top + i * 25 + 5));
+        }
+    }
+    if (nextButton.process(ev))
+    {
+        for (int i = 0; i < vector.size(); i++)
+        {
+            delete vector[i];
+        }
+        vector.clear();
+
+        for (size_t i = 0; i < count && curr < arrStr.size(); i++, curr++)
+        {
+            vector.push_back(new Text(arrStr[curr]));
+        }
+        for (size_t i = 0; i < vector.size(); i++)
+        {
+            vector[i]->setPosition(sf::Vector2f(rect.getGlobalBounds().left + 10, rect.getGlobalBounds().top + i * 25 + 5));
+        }
     }
     if (add && ev.key.control && ev.key.code == sf::Keyboard::V)
     {
@@ -378,20 +415,29 @@ void ListText::process(sf::Event ev)
         {
             token = str.substr(0, pos);
             arrStr.push_back(token);
-            vector.push_back(new Text(token));
             str.erase(0, pos + delimiter.length());
+        }
+
+        for (size_t i = 0; i < count && curr < arrStr.size(); i++, curr++)
+        {
+            vector.push_back(new Text(arrStr[curr]));
         }
 
         for (int i = 0; i < vector.size(); i++)
         {
             vector[i]->setPosition(sf::Vector2f(rect.getGlobalBounds().left + 10, rect.getGlobalBounds().top + i * 25 + 5));
         }
+        curr = count;
         add = false;
     }
     if (del)
     {
-        count = 0;
+        for (int i = 0; i < vector.size(); i++)
+        {
+            delete vector[i];
+        }
         vector.clear();
+        curr = 0;
         str = "";
         del = false;
     }
@@ -404,6 +450,8 @@ void ListText::render(sf::RenderWindow &wnd)
     {
         vector[i]->render(wnd);
     }
+    prevButton.render(wnd);
+    nextButton.render(wnd);
     addButton.render(wnd);
     delButton.render(wnd);
 }

@@ -6,12 +6,11 @@
 #include <string>
 #include <vector>
 
-
 class Button
 {
 public:
-    Button(std::string str = "", int size = 15, 
-            sf::Color clr = sf::Color::Black);
+    Button(std::string str = "", int size = 15,
+           sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setColor(sf::Color c);
     void setFont(sf::Font &fnt);
@@ -22,7 +21,7 @@ public:
 
 private:
     sf::Text text;
-    sf::Font font; 
+    sf::Font font;
     sf::Color c;
     sf::Texture texture;
     sf::Sprite sprite;
@@ -31,8 +30,8 @@ private:
 class TextEdit
 {
 public:
-    TextEdit(int wdth = 80, int size = 15, 
-            sf::Color clr = sf::Color::Black);
+    TextEdit(int wdth = 80, int size = 15,
+             sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setWidth(int wdth);
     void setColor(sf::Color c);
@@ -45,7 +44,7 @@ public:
 private:
     sf::String textInput = "";
     sf::Text text;
-    sf::Font font; 
+    sf::Font font;
     sf::Color c;
     sf::RectangleShape rect;
     sf::RectangleShape cursor;
@@ -77,7 +76,7 @@ public:
 
 private:
     sf::CircleShape point;
-    std::vector<sf::CircleShape*> vector;
+    std::vector<sf::CircleShape *> vector;
     int state = 0;
     int count;
 };
@@ -85,8 +84,8 @@ private:
 class Text
 {
 public:
-    Text(std::string str = "", int size = 15, 
-            sf::Color clr = sf::Color::Black);
+    Text(std::string str = "", int size = 15,
+         sf::Color clr = sf::Color::Black);
     void setPosition(sf::Vector2f pos);
     void render(sf::RenderWindow &wnd);
 
@@ -99,7 +98,7 @@ private:
 class ListText
 {
 public:
-    ListText(int hight, int width, int count);
+    ListText(int hight, int width, int cnt);
     void setPosition(sf::Vector2f pos);
     void process(sf::Event ev);
     void render(sf::RenderWindow &wnd);
@@ -108,11 +107,14 @@ private:
     bool del = false;
     bool add = false;
     int count = 0;
+    int curr = 0;
     std::string str;
-    std::vector <std::string> arrStr;
+    std::vector<std::string> arrStr;
     sf::RectangleShape rect;
-    std::vector <Text*> vector;
+    std::vector<Text *> vector;
     Button addButton = Button("Add");
     Button delButton = Button("Delete all");
+    Button prevButton = Button("<<");
+    Button nextButton = Button(">>");
 };
 #endif // !FORM
