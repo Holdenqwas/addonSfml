@@ -9,7 +9,7 @@
 class Button
 {
 public:
-    Button(std::string str = "", int size = 15,
+    Button(std::string str = "", std::string fontPath= "C:\\Windows\\Fonts\\Arial.ttf", int size = 15,
            sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setColor(sf::Color c);
@@ -30,7 +30,7 @@ private:
 class TextEdit
 {
 public:
-    TextEdit(int wdth = 80, int size = 15,
+    TextEdit(int wdth = 80, int size = 15, std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
              sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setWidth(int wdth);
@@ -84,7 +84,7 @@ private:
 class Text
 {
 public:
-    Text(std::string str = "", int size = 15,
+    Text(std::string str = "", int size = 15, std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
          sf::Color clr = sf::Color::Black);
     void setPosition(sf::Vector2f pos);
     void render(sf::RenderWindow &wnd);

@@ -5,16 +5,16 @@ sf::Color HOWER = sf::Color(0, 0, 0, 60);
 
 // Button
 
-Button::Button(std::string str, int size, sf::Color clr)
+Button::Button(std::string str, sf::string fontPath, int size, sf::Color clr)
 {
+	//"/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf"
     text.setString(str);
     text.setCharacterSize(size);
     text.setFillColor(clr);
     c = clr;
     texture.loadFromFile("./resurses/button.png");
     sprite.setTexture(texture);
-    font.loadFromFile(
-        "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    font.loadFromFile(fontPath);
     text.setFont(font);
 }
 
@@ -83,7 +83,7 @@ void Button::render(sf::RenderWindow &wnd)
 
 // TextEdit
 
-TextEdit::TextEdit(int wdth, int size,
+TextEdit::TextEdit(int wdth, int size, std::string fontPath,
                    sf::Color clr)
 {
     rect = sf::RectangleShape(sf::Vector2f(wdth, 25));
@@ -93,8 +93,7 @@ TextEdit::TextEdit(int wdth, int size,
     text.setCharacterSize(size);
     text.setFillColor(clr);
     c = clr;
-    font.loadFromFile(
-        "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    font.loadFromFile(fontPath);
     text.setFont(font);
     cursor = sf::RectangleShape(sf::Vector2f(2, 16));
     cursor.setFillColor(sf::Color::Black);
@@ -321,13 +320,12 @@ void RadioButton::render(sf::RenderWindow &wnd)
 
 // Text
 
-Text::Text(std::string str, int size, sf::Color clr)
+Text::Text(std::string str, int size, std::string fontPath sf::Color clr)
 {
     text.setString(str);
     text.setCharacterSize(size);
     text.setFillColor(clr);
-    font.loadFromFile(
-        "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    font.loadFromFile(fontPath);
     text.setFont(font);
 }
 

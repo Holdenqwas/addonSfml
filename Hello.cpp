@@ -1,16 +1,16 @@
 #include <iostream>
-#include <string>
+//#include <string>
 
 //#include <fstream>
 
-#include <SFML/Graphics.hpp>
+#include "Form.h"
 
 #include "DSAPI.h"
 #include "DSExt.h"
 #include "PrimeAPI.h"
 
 
-/*
+
 void CreateConsole()
 {
 	setlocale(LC_ALL, "Russian");
@@ -39,22 +39,9 @@ extern "C" void __stdcall Hello(void) {
 		return;
 	}
 
-	sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
-	sf::CircleShape shape(100.f, 4);
+	sf::RenderWindow window(sf::VideoMode(900, 900), "Autoreload");
+	window.setFramerateLimit(30);
 
-	shape.setFillColor(sf::Color::Green);
-
-	sf::String playerInput = "";
-	
-	sf::Font font;
-	font.loadFromFile("C:\\Windows\\Fonts\\Arial.ttf");
-
-	
-	sf::Text text;
-	text.setFont(font);
-	text.setString("");
-	text.setCharacterSize(24);
-	text.setFillColor(sf::Color::Black);
 	while (window.isOpen())
 	{
 		sf::Event event;
@@ -63,29 +50,269 @@ extern "C" void __stdcall Hello(void) {
 			if (event.type == sf::Event::Closed)
 				window.close();
 			
-			if (event.type == sf::Event::TextEntered)
-			{
-
-				if (event.text.unicode == '\b')
-				{
-					playerInput.erase(playerInput.getSize() - 1, 1);
-					text.setString(playerInput);
-				}
-				else if (event.text.unicode < 128) {
-					playerInput += event.text.unicode;
-					text.setString(playerInput);
-				}
-				
-			}
 		
 		}
 
 		window.clear(sf::Color::White);
 
-		//window.draw(shape);
 		window.draw(text);
 		window.display();
 	}
+
+
+	char FileName[1000] = "";
+	char AWildCard[1000] = "WildCard";
+	char ATitle[1000] = "Title";
+	char Value[1000] = "";
+	char temp[100] = "";
+	char result;
+	char well[100] = "";
+	char alt[100] = "";
+	float li = 0;
+
+	std::map <int, char*> ::iterator it;
+
+	void reloadColl()
+	{
+		std::map <int, char*> choices_col = { {818, "¶¶¶ œ—–¶¶¶0"},
+										{823, "¶¶¶ œ_Õ¶¶¶0" },
+										{825, "¶¶¶Rœ_œ¶¶¶0"},
+										{827, "¶¶¶ œ_œ¶¶¶0"},
+										{828, "¶¶¶ Õ√_œ¶¶¶0"},
+										{849, "¶¶¶ÕÕ¶¶¶0"},
+										{855, "¶¶¶Õ¶¶¶0"} };
+	}
+
+
+	void reloadCurve()
+	{
+		std::map <int, char*> choices = { {649, "¶¶¶¶ œ¶¶0"},
+										{651, "¶¶¶¶ √À¶¶0"},
+										{652, "¶¶¶¶ Õ√¶¶0"},
+										{659, "¶¶¶¶¿√ ¶¶0"},
+										{660, "¶¶¶¶¿Õ√ ¶¶0"},
+										{664, "¶¶¶¿√ _œ¶¶¶0"},
+										{665, "¶¶¶ √À_œ¶¶¶0"},
+										{666, "¶¶¶¿Õ√ _œ¶¶¶0"},
+										{715, "¶¶¶¶ œ–¶¶0"},
+										{716, "¶¶¶ œ–_œ¶¶¶0"},
+										{814, "¶¶¶ œ_œ¶¶¶0"},
+										{815, "¶¶¶ Õ√_œ¶¶¶0"},
+										{850, "¶¶¶ œ_Õ¶¶¶0"},
+										{852, "¶¶¶ œ—–¶¶¶0"},
+										{854, "¶¶¶ÕÕ¶¶¶0"},
+										{856, "¶¶¶Õ¶¶¶0"},
+										{863, "¶¶¶—”Ã_ œ_Õ¶¶¶0"},
+										{864, "¶¶¶—”Ã_ÕÕ¶¶¶0"},
+										{875, "¶¶¶Rœ_œ¶¶¶0"} };
+	}
+
+
+	//CreateConsole();
+
+	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
+	namespace fs = std::filesystem;
+
+
+
+	InputString("¬‚Â‰ËÚÂ ÔÛÚ¸", "œÛÚ¸ Ô‡ÔÍË Ò ÔÎ‡Ì¯ÂÚ‡ÏË", 200, Value);
+	//GetFilename("AWildCard", "ATitle", FileName);
+	//std::cout << FileName << std::endl;
+	std::string path = Value;
+
+	//‰Îˇ ÚÂÒÚËÓ‚‡ÌËˇ
+	//std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_“‡ÚÌÂÙÚ¸$\\œÓ‰Ò˜ÂÚ Á‡Ô‡ÒÓ‚\\“ÂÒÚ\\‡‚ÚÓÁ‡„ÛÁÍ‡\\Ô‡ÔÍ‡";
+	//int count = 0;
+
+	std::ofstream logError;				//‰ˇÎ Á‡ÔËÒË ‚ Ò‚Ò
+
+	logError.open(path + "\\errors.csv");
+	logError << "Well;Curves;Towers;Perforations;Well testing;Error" << std::endl;
+
+	//ÙËÎ¸ËÔ ÒÍ‚‡ÊËÌ
+	std::string path_csv = path + "\\test.csv";
+	std::ifstream  data(path_csv.c_str());
+	std::string line;
+	std::vector<std::vector<std::string> > parsedCsv;
+	while (std::getline(data, line))
+	{
+		std::stringstream lineStream(line);
+		std::string cell;
+		std::vector<std::string> parsedRow;
+		while (std::getline(lineStream, cell, ';'))
+		{
+			parsedRow.push_back(cell);
+		}
+
+		parsedCsv.push_back(parsedRow);
+	}
+
+	for (auto& p : fs::directory_iterator(path)) {
+		//‰Îˇ ÔÓ‰Ò˜ÂÚ‡ ‚ÂÏÂÌË
+		//auto start = std::chrono::system_clock::now();
+
+		//std::cout << p.path() << std::endl;
+		for (auto& file : fs::directory_iterator(p.path())) {
+			std::string path2 = file.path().string();
+
+			if (path2.substr(path2.length() - 2) == "WS" || path2.substr(path2.length() - 2) == "ws")
+			{
+				std::string name_plan = file.path().stem().string();
+				for (int i = 0; i < parsedCsv.size(); i++) {
+
+					//ÂÒÎË ËÏˇ ÔÎ‡Ì¯ÂÚ‡ ÂÒÚ¸ ‚ ÒÔËÒÍÂ csv
+					if (parsedCsv[i][0] == name_plan) {
+						logError << name_plan << ";";
+						//std::cout << "Ì‡˜‡Î" << std::endl;
+						SysLFInitOpen(path2.c_str(), &LFHandle);
+
+						Get_Table("œÀ¿Õÿ≈“", LFHandle, &LRHandle);
+						Goto_BeginObj(LRHandle);
+						GetCurObj(LRHandle, &ObjHandle);
+
+						//ÍË‚˚Â
+						GetArrayByName(&ArrHandle, "VIEWCURVES", ObjHandle);
+						logError << ArrayGetLen(ArrHandle) << ";";
+						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
+						{
+							GetArraySingle(ArrHandle, i, "Ident", &li);
+
+							it = choices.find(li);
+							if (it != choices.end())
+							{
+								boost::uuids::random_generator uuid_gen;
+								boost::uuids::uuid u = uuid_gen();
+								std::string tmp = boost::uuids::to_string(u);
+
+								std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+								tmp = "{" + tmp + "}";
+
+								xPutArrayString(ArrHandle, i, "PackCurveInfo", it->second);
+								xPutArrayString(ArrHandle, i, "CurveGUID", tmp.c_str());
+							}
+
+						}
+
+						LRPutObj(LRHandle, ObjHandle, 0, 0);
+
+						//ÍÓÎÓÌÍË
+						GetArrayByName(&ArrHandle, "ViewInterTowers", ObjHandle);
+						logError << ArrayGetLen(ArrHandle) << ";";
+						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
+						{
+							GetArraySingle(ArrHandle, i, "Ident", &li);
+
+							it = choices_col.find(li);
+							if (it != choices_col.end())
+							{
+								boost::uuids::random_generator uuid_gen;
+								boost::uuids::uuid u = uuid_gen();
+								std::string tmp = boost::uuids::to_string(u);
+
+								std::transform(tmp.begin(), tmp.end(), tmp.begin(), ::toupper);
+								tmp = "{" + tmp + "}";
+
+								xPutArrayString(ArrHandle, i, "PackedDataKey", it->second);
+								xPutArrayString(ArrHandle, i, "DataGUID", tmp.c_str());
+							}
+						}
+
+						LRPutObj(LRHandle, ObjHandle, 0, 0);
+
+						DoneHandle(&ArrHandle);
+						DoneHandle(&ObjHandle);
+						DoneHandle(&LRHandle);
+						//ÔÂÙÓ‡ˆËˇ
+						Get_Table("œ–»Ã»“»¬€_»Õ“≈–¬¿À¿", LFHandle, &LRHandle);
+						Goto_BeginObj(LRHandle);
+						GetCurObj(LRHandle, &ObjHandle);
+						DoneHandle(&ArrHandle);
+						GetArrayByName(&ArrHandle, "œ≈–‘Œ–¿÷»ﬂ_‘¿ “»◊≈— ", ObjHandle);
+						long count_perf = ArrayGetLen(ArrHandle);
+
+						DoneHandle(&ArrHandle);
+						GetArrayByName(&ArrHandle, "»Õ“_Œœ–_«¿ –", ObjHandle);
+						long count_opr = ArrayGetLen(ArrHandle);
+
+						logError << count_perf << ";" << count_opr << ";";
+
+						DoneHandle(&ArrHandle);
+						Get_Table("œÀ¿Õÿ≈“", LFHandle, &LRHandle);
+						Goto_BeginObj(LRHandle);
+						GetCurObj(LRHandle, &ObjHandle);
+
+						GetArrayByName(&ArrHandle, "ViewIntervals", ObjHandle);
+
+						std::string tmp;
+						std::string tmp_counter;
+
+						if (count_perf) {
+							for (int i = 0; i < count_perf; i++)
+							{
+								tmp_counter = std::to_string(921 + i);
+
+								xPutArrayString(ArrHandle, i, "Ident", tmp_counter.c_str());
+								xPutArrayString(ArrHandle, i, "Owner", "-1");
+								xPutArrayString(ArrHandle, i, "State", "0");
+								xPutArrayString(ArrHandle, i, "Start", "1433");
+								xPutArrayString(ArrHandle, i, "Width", "50");
+								xPutArrayString(ArrHandle, i, "Color", "0");
+								xPutArrayString(ArrHandle, i, "ArrayName", "œ≈–‘Œ–¿÷»ﬂ_‘¿ “»◊≈— ");
+								tmp_counter = std::to_string(i);
+								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
+
+								xPutArrayString(ArrHandle, i, "Copies", "Array 0");
+
+							}
+						}
+
+						if (count_opr) {
+							int pos_opr = 0;
+							for (int i = (count_perf ? count_perf : 0); i < count_opr + (count_perf ? count_perf : 0); i++)
+							{
+								tmp_counter = std::to_string(921 + i);
+
+								xPutArrayString(ArrHandle, i, "Ident", tmp_counter.c_str());
+								xPutArrayString(ArrHandle, i, "Owner", "-1");
+								xPutArrayString(ArrHandle, i, "State", "0");
+								xPutArrayString(ArrHandle, i, "Start", "1580");
+								xPutArrayString(ArrHandle, i, "Width", "50");
+								xPutArrayString(ArrHandle, i, "Color", "0");
+								xPutArrayString(ArrHandle, i, "ArrayName", "»Õ“_Œœ–_«¿ –");
+								tmp_counter = std::to_string(pos_opr);
+								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
+
+								xPutArrayString(ArrHandle, i, "Copies", "Array 0");
+								pos_opr++;
+							}
+						}
+
+						LRPutObj(LRHandle, ObjHandle, 0, 0);
+
+						DoneHandle(&ArrHandle);
+						DoneHandle(&ObjHandle);
+						DoneHandle(&LRHandle);
+						DoneHandle(&LFHandle);
+
+						logError << std::endl;
+					}
+				}
+			}
+		}
+
+
+		//‰Îˇ ÔÓ‰Ò˜ÂÚ‡ ‚ÂÏÂÌË
+		/*
+		auto end = std::chrono::system_clock::now();
+
+		std::chrono::duration<double> elapsed_seconds = end - start;
+		std::time_t end_time = std::chrono::system_clock::to_time_t(end);
+		std::cout << "elapsed time: " << elapsed_seconds.count() << std::endl;
+		*/
+	}
+
+	//std::cout << "Done " << std::endl;
+	logError.close();
 	//CreateConsole();
 
 	//std::cout << "Done."<< std::endl;
@@ -94,7 +321,7 @@ extern "C" void __stdcall Hello(void) {
 
 
 
-const char* CopyrightMessage = "¡Ë·ÎËÓÚÂÍ‡ ‰Îˇ ÒËÒÚÂÏ˚ \"œ‡ÈÏ\"\r(c) 2021 ¿ÌÚÓÌ ’ÓÌ";
+const char* CopyrightMessage = "√‡ÙË˜ÂÒÍ‡ˇ ·Ë·ÎËÓÚÂÍ‡ ‰Îˇ ÒËÒÚÂÏ˚ \"œ‡ÈÏ\"\r(c) 2021 ¿ÌÚÓÌ ’ÓÌ";
 
 extern "C" const char* __stdcall PrimeLibraryCopyright(void)
 {
