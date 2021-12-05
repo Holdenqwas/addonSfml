@@ -9,19 +9,18 @@
 #include "DSExt.h"
 #include "PrimeAPI.h"
 
-
-
 void CreateConsole()
 {
 	setlocale(LC_ALL, "Russian");
-	if (!AllocConsole()) {
+	if (!AllocConsole())
+	{
 		// Add some error handling here.
 		// You can call GetLastError() to get more info about the error.
 		return;
 	}
 
 	// std::cout, std::clog, std::cerr, std::cin
-	FILE* fDummy;
+	FILE *fDummy;
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
@@ -29,18 +28,102 @@ void CreateConsole()
 	std::clog.clear();
 	std::cerr.clear();
 	std::cin.clear();
-
 }
-*/
-extern "C" void __stdcall Hello(void) {
-	/* Попытка динамического подключения к графическому монитору */
+
+extern "C" void __stdcall Hello(void)
+{
 	if (!Prime32Connect())
 	{
 		return;
 	}
 
-	sf::RenderWindow window(sf::VideoMode(900, 900), "Autoreload");
+	std::string pathFont = "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf";
+	sf::RenderWindow window(sf::VideoMode(600, 500), "Autoreload");
 	window.setFramerateLimit(30);
+
+	// left block
+	Text inputWell("Input wells:", pathFont);
+	inputWell.setPosition(sf::Vector2f(30, 30));
+
+	ListText list(170, 350, 10);
+	list.setPosition(sf::Vector2f(30, 60));
+
+	// rigth block
+	CheckBox editPz;
+	editPz.setPosition(sf::Vector2f(270, 30));
+	Text editPzTitle("Reload PZ coefficients", pathFont);
+	editPzTitle.setPosition(sf::Vector2f(300, 30));
+
+	CheckBox editRigis;
+	editRigis.setPosition(sf::Vector2f(270, 70));
+	Text editRigisTitle("Reload RIGIS", pathFont);
+	editRigisTitle.setPosition(sf::Vector2f(300, 70));
+
+	CheckBox editIndex;
+	editIndex.setPosition(sf::Vector2f(270, 110));
+	Text editIndexTitle("Reload Indexes", pathFont);
+	editIndexTitle.setPosition(sf::Vector2f(300, 110));
+
+	CheckBox editPerf;
+	editPerf.setPosition(sf::Vector2f(270, 150));
+	Text editPerfTitle("Reload Perforations", pathFont);
+	editPerfTitle.setPosition(sf::Vector2f(300, 150));
+
+	Text perfStartTitle("Input start Perforation:", pathFont);
+	perfStartTitle.setPosition(sf::Vector2f(300, 190));
+	TextEdit perfStart(50, pathFont);
+	perfStart.setPosition(sf::Vector2f(480, 190));
+
+	CheckBox editTest;
+	editTest.setPosition(sf::Vector2f(270, 230));
+	Text editTestTitle("Reload Tests", pathFont);
+	editTestTitle.setPosition(sf::Vector2f(300, 230));
+
+	Text testStartTitle("Input start Tests:", pathFont);
+	testStartTitle.setPosition(sf::Vector2f(300, 270));
+	TextEdit testStart(50, pathFont);
+	testStart.setPosition(sf::Vector2f(480, 270));
+
+	Text editCurveTitle("Reload Curves", pathFont);
+	editCurveTitle.setPosition(sf::Vector2f(270, 310));
+
+	CheckBox editKS;
+	editKS.setPosition(sf::Vector2f(300, 340));
+	Text editKSTitle("KS", pathFont);
+	editKSTitle.setPosition(sf::Vector2f(330, 340));
+
+	CheckBox editPS;
+	editPS.setPosition(sf::Vector2f(300, 370));
+	Text editPSTitle("PS", pathFont);
+	editPSTitle.setPosition(sf::Vector2f(330, 370));
+
+	CheckBox editDS;
+	editDS.setPosition(sf::Vector2f(300, 400));
+	Text editDSTitle("DS", pathFont);
+	editDSTitle.setPosition(sf::Vector2f(330, 400));
+
+	CheckBox editGK;
+	editGK.setPosition(sf::Vector2f(400, 340));
+	Text editGKTitle("GK", pathFont);
+	editGKTitle.setPosition(sf::Vector2f(430, 340));
+
+	CheckBox editNGK;
+	editNGK.setPosition(sf::Vector2f(400, 370));
+	Text editNGKTitle("NGK", pathFont);
+	editNGKTitle.setPosition(sf::Vector2f(430, 370));
+
+	CheckBox editBK;
+	editBK.setPosition(sf::Vector2f(500, 340));
+	Text editBKTitle("BK", pathFont);
+	editBKTitle.setPosition(sf::Vector2f(530, 340));
+
+	CheckBox editIK;
+	editIK.setPosition(sf::Vector2f(500, 370));
+	Text editIKTitle("IK", pathFont);
+	editIKTitle.setPosition(sf::Vector2f(530, 370));
+
+	Button startProcess("Start", pathFont);
+	startProcess.setPosition(sf::Vector2f(480, 450));
 
 	while (window.isOpen())
 	{
@@ -49,16 +132,69 @@ extern "C" void __stdcall Hello(void) {
 		{
 			if (event.type == sf::Event::Closed)
 				window.close();
-			
-		
+			list.process(event);
+			editPz.process(event);
+			editRigis.process(event);
+			editIndex.process(event);
+			editPerf.process(event);
+			perfStart.process(event);
+			editTest.process(event);
+			testStart.process(event);
+
+			editKS.process(event);
+			editPS.process(event);
+			editDS.process(event);
+
+			editGK.process(event);
+			editNGK.process(event);
+
+			editBK.process(event);
+			editIK.process(event);
+
+			startProcess.process(event);
 		}
 
 		window.clear(sf::Color::White);
 
-		window.draw(text);
+		inputWell.render(window);
+		list.render(window);
+		editPz.render(window);
+		editPzTitle.render(window);
+		editRigis.render(window);
+		editRigisTitle.render(window);
+		editIndex.render(window);
+		editIndexTitle.render(window);
+		editPerf.render(window);
+		editPerfTitle.render(window);
+		perfStart.render(window);
+		perfStartTitle.render(window);
+		editTest.render(window);
+		editTestTitle.render(window);
+		testStart.render(window);
+		testStartTitle.render(window);
+		editCurveTitle.render(window);
+
+		editKS.render(window);
+		editKSTitle.render(window);
+		editPS.render(window);
+		editPSTitle.render(window);
+		editDS.render(window);
+		editDSTitle.render(window);
+
+		editGK.render(window);
+		editGKTitle.render(window);
+		editNGK.render(window);
+		editNGKTitle.render(window);
+
+		editIK.render(window);
+		editIKTitle.render(window);
+		editBK.render(window);
+		editBKTitle.render(window);
+
+		startProcess.render(window);
+
 		window.display();
 	}
-
 
 	char FileName[1000] = "";
 	char AWildCard[1000] = "WildCard";
@@ -70,70 +206,66 @@ extern "C" void __stdcall Hello(void) {
 	char alt[100] = "";
 	float li = 0;
 
-	std::map <int, char*> ::iterator it;
+	std::map<int, char *>::iterator it;
 
 	void reloadColl()
 	{
-		std::map <int, char*> choices_col = { {818, "¦¦¦КПСР¦¦¦0"},
-										{823, "¦¦¦КП_Н¦¦¦0" },
-										{825, "¦¦¦RП_П¦¦¦0"},
-										{827, "¦¦¦КП_П¦¦¦0"},
-										{828, "¦¦¦КНГ_П¦¦¦0"},
-										{849, "¦¦¦НН¦¦¦0"},
-										{855, "¦¦¦Н¦¦¦0"} };
+		std::map<int, char *> choices_col = {{818, "пїЅпїЅпїЅпїЅпїЅпїЅР¦пїЅпїЅ0"},
+											 {823, "пїЅпїЅпїЅпїЅпїЅ_Н¦пїЅпїЅ0"},
+											 {825, "пїЅпїЅпїЅRпїЅ_П¦пїЅпїЅ0"},
+											 {827, "пїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+											 {828, "пїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+											 {849, "пїЅпїЅпїЅпїЅН¦пїЅпїЅ0"},
+											 {855, "пїЅпїЅпїЅН¦пїЅпїЅ0"}};
 	}
-
 
 	void reloadCurve()
 	{
-		std::map <int, char*> choices = { {649, "¦¦¦¦КП¦¦0"},
-										{651, "¦¦¦¦КГЛ¦¦0"},
-										{652, "¦¦¦¦КНГ¦¦0"},
-										{659, "¦¦¦¦АГК¦¦0"},
-										{660, "¦¦¦¦АНГК¦¦0"},
-										{664, "¦¦¦АГК_П¦¦¦0"},
-										{665, "¦¦¦КГЛ_П¦¦¦0"},
-										{666, "¦¦¦АНГК_П¦¦¦0"},
-										{715, "¦¦¦¦КПР¦¦0"},
-										{716, "¦¦¦КПР_П¦¦¦0"},
-										{814, "¦¦¦КП_П¦¦¦0"},
-										{815, "¦¦¦КНГ_П¦¦¦0"},
-										{850, "¦¦¦КП_Н¦¦¦0"},
-										{852, "¦¦¦КПСР¦¦¦0"},
-										{854, "¦¦¦НН¦¦¦0"},
-										{856, "¦¦¦Н¦¦¦0"},
-										{863, "¦¦¦СУМ_КП_Н¦¦¦0"},
-										{864, "¦¦¦СУМ_НН¦¦¦0"},
-										{875, "¦¦¦RП_П¦¦¦0"} };
+		std::map<int, char *> choices = {{649, "пїЅпїЅпїЅпїЅпїЅП¦пїЅ0"},
+										 {651, "пїЅпїЅпїЅпїЅпїЅпїЅЛ¦пїЅ0"},
+										 {652, "пїЅпїЅпїЅпїЅпїЅпїЅГ¦пїЅ0"},
+										 {659, "пїЅпїЅпїЅпїЅпїЅпїЅК¦пїЅ0"},
+										 {660, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅК¦пїЅ0"},
+										 {664, "пїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {665, "пїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {666, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {715, "пїЅпїЅпїЅпїЅпїЅпїЅР¦пїЅ0"},
+										 {716, "пїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {814, "пїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {815, "пїЅпїЅпїЅпїЅпїЅпїЅ_П¦пїЅпїЅ0"},
+										 {850, "пїЅпїЅпїЅпїЅпїЅ_Н¦пїЅпїЅ0"},
+										 {852, "пїЅпїЅпїЅпїЅпїЅпїЅР¦пїЅпїЅ0"},
+										 {854, "пїЅпїЅпїЅпїЅН¦пїЅпїЅ0"},
+										 {856, "пїЅпїЅпїЅН¦пїЅпїЅ0"},
+										 {863, "пїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅ_Н¦пїЅпїЅ0"},
+										 {864, "пїЅпїЅпїЅпїЅпїЅпїЅ_пїЅН¦пїЅпїЅ0"},
+										 {875, "пїЅпїЅпїЅRпїЅ_П¦пїЅпїЅ0"}};
 	}
 
-
-	//CreateConsole();
+	// CreateConsole();
 
 	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
 	namespace fs = std::filesystem;
 
-
-
-	InputString("Введите путь", "Путь папки с планшетами", 200, Value);
-	//GetFilename("AWildCard", "ATitle", FileName);
-	//std::cout << FileName << std::endl;
+	InputString("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ", "пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", 200, Value);
+	// GetFilename("AWildCard", "ATitle", FileName);
+	// std::cout << FileName << std::endl;
 	std::string path = Value;
 
-	//для тестирования
-	//std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_Татнефть$\\Подсчет запасов\\Тест\\автозагрузка\\папка";
-	//int count = 0;
+	//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ$\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\пїЅпїЅпїЅпїЅ\\пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ\\пїЅпїЅпїЅпїЅпїЅ";
+	// int count = 0;
 
-	std::ofstream logError;				//дял записи в свс
+	std::ofstream logError; //пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
 
 	logError.open(path + "\\errors.csv");
 	logError << "Well;Curves;Towers;Perforations;Well testing;Error" << std::endl;
 
-	//фильип скважин
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	std::string path_csv = path + "\\test.csv";
-	std::ifstream  data(path_csv.c_str());
+	std::ifstream data(path_csv.c_str());
 	std::string line;
-	std::vector<std::vector<std::string> > parsedCsv;
+	std::vector<std::vector<std::string>> parsedCsv;
 	while (std::getline(data, line))
 	{
 		std::stringstream lineStream(line);
@@ -147,30 +279,34 @@ extern "C" void __stdcall Hello(void) {
 		parsedCsv.push_back(parsedRow);
 	}
 
-	for (auto& p : fs::directory_iterator(path)) {
-		//для подсчета времени
-		//auto start = std::chrono::system_clock::now();
+	for (auto &p : fs::directory_iterator(path))
+	{
+		//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// auto start = std::chrono::system_clock::now();
 
-		//std::cout << p.path() << std::endl;
-		for (auto& file : fs::directory_iterator(p.path())) {
+		// std::cout << p.path() << std::endl;
+		for (auto &file : fs::directory_iterator(p.path()))
+		{
 			std::string path2 = file.path().string();
 
 			if (path2.substr(path2.length() - 2) == "WS" || path2.substr(path2.length() - 2) == "ws")
 			{
 				std::string name_plan = file.path().stem().string();
-				for (int i = 0; i < parsedCsv.size(); i++) {
+				for (int i = 0; i < parsedCsv.size(); i++)
+				{
 
-					//если имя планшета есть в списке csv
-					if (parsedCsv[i][0] == name_plan) {
+					//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ csv
+					if (parsedCsv[i][0] == name_plan)
+					{
 						logError << name_plan << ";";
-						//std::cout << "начал" << std::endl;
+						// std::cout << "пїЅпїЅпїЅпїЅпїЅ" << std::endl;
 						SysLFInitOpen(path2.c_str(), &LFHandle);
 
-						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
+						Get_Table("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 
-						//кривые
+						//пїЅпїЅпїЅпїЅпїЅпїЅ
 						GetArrayByName(&ArrHandle, "VIEWCURVES", ObjHandle);
 						logError << ArrayGetLen(ArrHandle) << ";";
 						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
@@ -190,12 +326,11 @@ extern "C" void __stdcall Hello(void) {
 								xPutArrayString(ArrHandle, i, "PackCurveInfo", it->second);
 								xPutArrayString(ArrHandle, i, "CurveGUID", tmp.c_str());
 							}
-
 						}
 
 						LRPutObj(LRHandle, ObjHandle, 0, 0);
 
-						//колонки
+						//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 						GetArrayByName(&ArrHandle, "ViewInterTowers", ObjHandle);
 						logError << ArrayGetLen(ArrHandle) << ";";
 						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
@@ -222,22 +357,22 @@ extern "C" void __stdcall Hello(void) {
 						DoneHandle(&ArrHandle);
 						DoneHandle(&ObjHandle);
 						DoneHandle(&LRHandle);
-						//перфорация
-						Get_Table("ПРИМИТИВЫ_ИНТЕРВАЛА", LFHandle, &LRHandle);
+						//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+						Get_Table("пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 						DoneHandle(&ArrHandle);
-						GetArrayByName(&ArrHandle, "ПЕРФОРАЦИЯ_ФАКТИЧЕСК", ObjHandle);
+						GetArrayByName(&ArrHandle, "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ", ObjHandle);
 						long count_perf = ArrayGetLen(ArrHandle);
 
 						DoneHandle(&ArrHandle);
-						GetArrayByName(&ArrHandle, "ИНТ_ОПР_ЗАКР", ObjHandle);
+						GetArrayByName(&ArrHandle, "пїЅпїЅпїЅ_пїЅпїЅпїЅ_пїЅпїЅпїЅпїЅ", ObjHandle);
 						long count_opr = ArrayGetLen(ArrHandle);
 
 						logError << count_perf << ";" << count_opr << ";";
 
 						DoneHandle(&ArrHandle);
-						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
+						Get_Table("пїЅпїЅпїЅпїЅпїЅпїЅпїЅ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 
@@ -246,7 +381,8 @@ extern "C" void __stdcall Hello(void) {
 						std::string tmp;
 						std::string tmp_counter;
 
-						if (count_perf) {
+						if (count_perf)
+						{
 							for (int i = 0; i < count_perf; i++)
 							{
 								tmp_counter = std::to_string(921 + i);
@@ -257,16 +393,16 @@ extern "C" void __stdcall Hello(void) {
 								xPutArrayString(ArrHandle, i, "Start", "1433");
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
-								xPutArrayString(ArrHandle, i, "ArrayName", "ПЕРФОРАЦИЯ_ФАКТИЧЕСК");
+								xPutArrayString(ArrHandle, i, "ArrayName", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ_пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ");
 								tmp_counter = std::to_string(i);
 								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
 
 								xPutArrayString(ArrHandle, i, "Copies", "Array 0");
-
 							}
 						}
 
-						if (count_opr) {
+						if (count_opr)
+						{
 							int pos_opr = 0;
 							for (int i = (count_perf ? count_perf : 0); i < count_opr + (count_perf ? count_perf : 0); i++)
 							{
@@ -278,7 +414,7 @@ extern "C" void __stdcall Hello(void) {
 								xPutArrayString(ArrHandle, i, "Start", "1580");
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
-								xPutArrayString(ArrHandle, i, "ArrayName", "ИНТ_ОПР_ЗАКР");
+								xPutArrayString(ArrHandle, i, "ArrayName", "пїЅпїЅпїЅ_пїЅпїЅпїЅ_пїЅпїЅпїЅпїЅ");
 								tmp_counter = std::to_string(pos_opr);
 								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
 
@@ -300,8 +436,7 @@ extern "C" void __stdcall Hello(void) {
 			}
 		}
 
-
-		//для подсчета времени
+		//пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		/*
 		auto end = std::chrono::system_clock::now();
 
@@ -311,36 +446,34 @@ extern "C" void __stdcall Hello(void) {
 		*/
 	}
 
-	//std::cout << "Done " << std::endl;
+	// std::cout << "Done " << std::endl;
 	logError.close();
-	//CreateConsole();
+	// CreateConsole();
 
-	//std::cout << "Done."<< std::endl;
-	
+	// std::cout << "Done."<< std::endl;
+
 } // Hello01
 
+const char *CopyrightMessage = "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ \"пїЅпїЅпїЅпїЅпїЅ\"\r(c) 2021 пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ";
 
-
-const char* CopyrightMessage = "Графическая библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
-
-extern "C" const char* __stdcall PrimeLibraryCopyright(void)
+extern "C" const char *__stdcall PrimeLibraryCopyright(void)
 {
 	return CopyrightMessage;
 }
 
-const char* ExportedFunctions[] =
-{
-	"Hello\rЗагрузить пласты\rГрузит пласты из стратиграфии",
-	NULL
-};
+const char *ExportedFunctions[] =
+	{
+		"Hello\rпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ\rпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ",
+		NULL};
 
-extern "C" const char** __stdcall PrimeExportedFunctions(void) {
+extern "C" const char **__stdcall PrimeExportedFunctions(void)
+{
 	return ExportedFunctions;
 }
 
-const char* Version = "01.00.00.0021";
+const char *Version = "01.00.00.0021";
 
-extern "C" const char* __stdcall PrimeLibraryVersion(void)
+extern "C" const char *__stdcall PrimeLibraryVersion(void)
 {
 	return Version;
 }
