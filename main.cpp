@@ -8,11 +8,17 @@ int main()
     window.setFramerateLimit(30);
 
     // left block
-    Text inputWell("Input wells:", pathFont);
-    inputWell.setPosition(sf::Vector2f(30, 30));
+    Text editPathText("Input work directory:", pathFont);
+    editPathText.setPosition(sf::Vector2f(30, 30));
+    
+    TextEdit editPath(170, pathFont);
+    editPath.setPosition(sf::Vector2f(30, 70));
 
-    ListText list(170, 350, 10);
-    list.setPosition(sf::Vector2f(30, 60));
+    Text inputWell("Input wells:", pathFont);
+    inputWell.setPosition(sf::Vector2f(30, 110));
+
+    ListText list(170, 250, 10);
+    list.setPosition(sf::Vector2f(30, 150));
 
     // rigth block
     CheckBox editPz;
@@ -97,7 +103,10 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
+            {
                 window.close();
+            }
+            editPath.process(event);
             list.process(event);
             editPz.process(event);
             editRigis.process(event);
@@ -122,6 +131,8 @@ int main()
 
         window.clear(sf::Color::White);
 
+        editPath.render(window);
+        editPathText.render(window);
         inputWell.render(window);
         list.render(window);
         editPz.render(window);

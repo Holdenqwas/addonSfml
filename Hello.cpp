@@ -37,92 +37,105 @@ extern "C" void __stdcall Hello(void)
 		return;
 	}
 
-	std::string pathFont = "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf";
+	// Variables
+	std::string path;
+	std::string wells;
+
+	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
+	namespace fs = std::filesystem;
+
+	// App
 	sf::RenderWindow window(sf::VideoMode(600, 500), "Autoreload");
 	window.setFramerateLimit(30);
 
 	// left block
-	Text inputWell("Input wells:", pathFont);
-	inputWell.setPosition(sf::Vector2f(30, 30));
+	Text editPathText("Input work directory:");
+	editPathText.setPosition(sf::Vector2f(30, 30));
 
-	ListText list(170, 350, 10);
-	list.setPosition(sf::Vector2f(30, 60));
+	TextEdit editPath(170);
+	editPath.setPosition(sf::Vector2f(30, 70));
+
+	Text inputWell("Input wells:");
+	inputWell.setPosition(sf::Vector2f(30, 110));
+
+	ListText list(170, 250, 10);
+	list.setPosition(sf::Vector2f(30, 150));
 
 	// rigth block
 	CheckBox editPz;
 	editPz.setPosition(sf::Vector2f(270, 30));
-	Text editPzTitle("Reload PZ coefficients", pathFont);
+	Text editPzTitle("Reload PZ coefficients");
 	editPzTitle.setPosition(sf::Vector2f(300, 30));
 
 	CheckBox editRigis;
 	editRigis.setPosition(sf::Vector2f(270, 70));
-	Text editRigisTitle("Reload RIGIS", pathFont);
+	Text editRigisTitle("Reload RIGIS");
 	editRigisTitle.setPosition(sf::Vector2f(300, 70));
 
 	CheckBox editIndex;
 	editIndex.setPosition(sf::Vector2f(270, 110));
-	Text editIndexTitle("Reload Indexes", pathFont);
+	Text editIndexTitle("Reload Indexes");
 	editIndexTitle.setPosition(sf::Vector2f(300, 110));
 
 	CheckBox editPerf;
 	editPerf.setPosition(sf::Vector2f(270, 150));
-	Text editPerfTitle("Reload Perforations", pathFont);
+	Text editPerfTitle("Reload Perforations");
 	editPerfTitle.setPosition(sf::Vector2f(300, 150));
 
-	Text perfStartTitle("Input start Perforation:", pathFont);
+	Text perfStartTitle("Input start Perforation:");
 	perfStartTitle.setPosition(sf::Vector2f(300, 190));
-	TextEdit perfStart(50, pathFont);
+	TextEdit perfStart(50);
 	perfStart.setPosition(sf::Vector2f(480, 190));
 
 	CheckBox editTest;
 	editTest.setPosition(sf::Vector2f(270, 230));
-	Text editTestTitle("Reload Tests", pathFont);
+	Text editTestTitle("Reload Tests");
 	editTestTitle.setPosition(sf::Vector2f(300, 230));
 
-	Text testStartTitle("Input start Tests:", pathFont);
+	Text testStartTitle("Input start Tests:");
 	testStartTitle.setPosition(sf::Vector2f(300, 270));
-	TextEdit testStart(50, pathFont);
+	TextEdit testStart(50);
 	testStart.setPosition(sf::Vector2f(480, 270));
 
-	Text editCurveTitle("Reload Curves", pathFont);
+	Text editCurveTitle("Reload Curves");
 	editCurveTitle.setPosition(sf::Vector2f(270, 310));
 
 	CheckBox editKS;
 	editKS.setPosition(sf::Vector2f(300, 340));
-	Text editKSTitle("KS", pathFont);
+	Text editKSTitle("KS");
 	editKSTitle.setPosition(sf::Vector2f(330, 340));
 
 	CheckBox editPS;
 	editPS.setPosition(sf::Vector2f(300, 370));
-	Text editPSTitle("PS", pathFont);
+	Text editPSTitle("PS");
 	editPSTitle.setPosition(sf::Vector2f(330, 370));
 
 	CheckBox editDS;
 	editDS.setPosition(sf::Vector2f(300, 400));
-	Text editDSTitle("DS", pathFont);
+	Text editDSTitle("DS");
 	editDSTitle.setPosition(sf::Vector2f(330, 400));
 
 	CheckBox editGK;
 	editGK.setPosition(sf::Vector2f(400, 340));
-	Text editGKTitle("GK", pathFont);
+	Text editGKTitle("GK");
 	editGKTitle.setPosition(sf::Vector2f(430, 340));
 
 	CheckBox editNGK;
 	editNGK.setPosition(sf::Vector2f(400, 370));
-	Text editNGKTitle("NGK", pathFont);
+	Text editNGKTitle("NGK");
 	editNGKTitle.setPosition(sf::Vector2f(430, 370));
 
 	CheckBox editBK;
 	editBK.setPosition(sf::Vector2f(500, 340));
-	Text editBKTitle("BK", pathFont);
+	Text editBKTitle("BK");
 	editBKTitle.setPosition(sf::Vector2f(530, 340));
 
 	CheckBox editIK;
 	editIK.setPosition(sf::Vector2f(500, 370));
-	Text editIKTitle("IK", pathFont);
+	Text editIKTitle("IK");
 	editIKTitle.setPosition(sf::Vector2f(530, 370));
 
-	Button startProcess("Start", pathFont);
+	Button startProcess("Start");
 	startProcess.setPosition(sf::Vector2f(480, 450));
 
 	while (window.isOpen())
@@ -131,7 +144,10 @@ extern "C" void __stdcall Hello(void)
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
 				window.close();
+			}
+			path = editPath.process(event);
 			list.process(event);
 			editPz.process(event);
 			editRigis.process(event);
@@ -156,6 +172,8 @@ extern "C" void __stdcall Hello(void)
 
 		window.clear(sf::Color::White);
 
+		editPath.render(window);
+		editPathText.render(window);
 		inputWell.render(window);
 		list.render(window);
 		editPz.render(window);
@@ -243,40 +261,17 @@ extern "C" void __stdcall Hello(void)
 	}
 
 	// CreateConsole();
-
-	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
-	namespace fs = std::filesystem;
-
-	InputString("������� ����", "���� ����� � ����������", 200, Value);
-	// GetFilename("AWildCard", "ATitle", FileName);
-	// std::cout << FileName << std::endl;
-	std::string path = Value;
-
+ 
 	//��� ������������
 	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_��������$\\������� �������\\����\\������������\\�����";
 	// int count = 0;
 
-	std::ofstream logError; //��� ������ � ���
-
-	logError.open(path + "\\errors.csv");
-	logError << "Well;Curves;Towers;Perforations;Well testing;Error" << std::endl;
-
+	
 	//������ �������
-	std::string path_csv = path + "\\test.csv";
-	std::ifstream data(path_csv.c_str());
-	std::string line;
-	std::vector<std::vector<std::string>> parsedCsv;
+	std::vector<std::string> arrWells;
 	while (std::getline(data, line))
 	{
-		std::stringstream lineStream(line);
-		std::string cell;
-		std::vector<std::string> parsedRow;
-		while (std::getline(lineStream, cell, ';'))
-		{
-			parsedRow.push_back(cell);
-		}
-
-		parsedCsv.push_back(parsedRow);
+		arrWells.push_back(line);
 	}
 
 	for (auto &p : fs::directory_iterator(path))
@@ -296,9 +291,8 @@ extern "C" void __stdcall Hello(void)
 				{
 
 					//���� ��� �������� ���� � ������ csv
-					if (parsedCsv[i][0] == name_plan)
+					if (arrWells[i] == name_plan)
 					{
-						logError << name_plan << ";";
 						// std::cout << "�����" << std::endl;
 						SysLFInitOpen(path2.c_str(), &LFHandle);
 
