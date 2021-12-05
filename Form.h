@@ -30,8 +30,8 @@ private:
 class TextEdit
 {
 public:
-    TextEdit(int wdth = 80, int size = 15, std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
-             sf::Color clr = sf::Color::Black);
+    TextEdit(int wdth = 80, std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
+            int size = 15, sf::Color clr = sf::Color::Black);
     void setString(sf::String str);
     void setWidth(int wdth);
     void setColor(sf::Color c);
@@ -84,8 +84,8 @@ private:
 class Text
 {
 public:
-    Text(std::string str = "", int size = 15, std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
-         sf::Color clr = sf::Color::Black);
+    Text(std::string str = "", std::string fontPath = "C:\\Windows\\Fonts\\Arial.ttf",
+        int size = 15, sf::Color clr = sf::Color::Black);
     void setPosition(sf::Vector2f pos);
     void render(sf::RenderWindow &wnd);
 
@@ -112,9 +112,9 @@ private:
     std::vector<std::string> arrStr;
     sf::RectangleShape rect;
     std::vector<Text *> vector;
-    Button addButton = Button("Add");
-    Button delButton = Button("Delete all");
-    Button prevButton = Button("<<");
-    Button nextButton = Button(">>");
+    Button addButton = Button("Add", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    Button delButton = Button("Delete all", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    Button prevButton = Button("<<", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+    Button nextButton = Button(">>", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
 };
 #endif // !FORM
