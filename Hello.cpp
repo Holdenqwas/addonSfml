@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
+#include <vector>
 
 #include <boost/uuid/uuid.hpp>            // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
@@ -51,7 +52,7 @@ extern "C" void __stdcall Hello(void)
 
 	// Variables
 	std::string path;
-	std::string wells;
+	std::vector <std::string> arrWells;
 
 	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
 	namespace fs = std::filesystem;
@@ -160,7 +161,7 @@ extern "C" void __stdcall Hello(void)
 				window.close();
 			}
 			path = editPath.process(event);
-			list.process(event);
+			arrWells = list.process(event);
 			editPz.process(event);
 			editRigis.process(event);
 			editIndex.process(event);
@@ -238,41 +239,35 @@ extern "C" void __stdcall Hello(void)
 
 	std::map<int, char*>::iterator it;
 
-	void reloadColl()
-	{
-		std::map <int, char*> choices_col = { {818, "¦¦¦КПСР¦¦¦0"},
-											{823, "¦¦¦КП_Н¦¦¦0" },
-											{825, "¦¦¦RП_П¦¦¦0"},
-											{827, "¦¦¦КП_П¦¦¦0"},
-											{828, "¦¦¦КНГ_П¦¦¦0"},
-											{849, "¦¦¦НН¦¦¦0"},
-											{855, "¦¦¦Н¦¦¦0"} };
-	}
+	std::map <int, char*> choices_col = { {818, "¦¦¦КПСР¦¦¦0"},
+										{823, "¦¦¦КП_Н¦¦¦0" },
+										{825, "¦¦¦RП_П¦¦¦0"},
+										{827, "¦¦¦КП_П¦¦¦0"},
+										{828, "¦¦¦КНГ_П¦¦¦0"},
+										{849, "¦¦¦НН¦¦¦0"},
+										{855, "¦¦¦Н¦¦¦0"} };
 
-	void reloadCurve()
-	{
-		std::map <int, char*> choices = { {649, "¦¦¦¦КП¦¦0"},
-												{651, "¦¦¦¦КГЛ¦¦0"},
-												{652, "¦¦¦¦КНГ¦¦0"},
-												{659, "¦¦¦¦АГК¦¦0"},
-												{660, "¦¦¦¦АНГК¦¦0"},
-												{664, "¦¦¦АГК_П¦¦¦0"},
-												{665, "¦¦¦КГЛ_П¦¦¦0"},
-												{666, "¦¦¦АНГК_П¦¦¦0"},
-												{715, "¦¦¦¦КПР¦¦0"},
-												{716, "¦¦¦КПР_П¦¦¦0"},
-												{814, "¦¦¦КП_П¦¦¦0"},
-												{815, "¦¦¦КНГ_П¦¦¦0"},
-												{850, "¦¦¦КП_Н¦¦¦0"},
-												{852, "¦¦¦КПСР¦¦¦0"},
-												{854, "¦¦¦НН¦¦¦0"},
-												{856, "¦¦¦Н¦¦¦0"},
-												{863, "¦¦¦СУМ_КП_Н¦¦¦0"},
-												{864, "¦¦¦СУМ_НН¦¦¦0"},
-												{875, "¦¦¦RП_П¦¦¦0"} };
+	std::map <int, char*> choices = { {649, "¦¦¦¦КП¦¦0"},
+											{651, "¦¦¦¦КГЛ¦¦0"},
+											{652, "¦¦¦¦КНГ¦¦0"},
+											{659, "¦¦¦¦АГК¦¦0"},
+											{660, "¦¦¦¦АНГК¦¦0"},
+											{664, "¦¦¦АГК_П¦¦¦0"},
+											{665, "¦¦¦КГЛ_П¦¦¦0"},
+											{666, "¦¦¦АНГК_П¦¦¦0"},
+											{715, "¦¦¦¦КПР¦¦0"},
+											{716, "¦¦¦КПР_П¦¦¦0"},
+											{814, "¦¦¦КП_П¦¦¦0"},
+											{815, "¦¦¦КНГ_П¦¦¦0"},
+											{850, "¦¦¦КП_Н¦¦¦0"},
+											{852, "¦¦¦КПСР¦¦¦0"},
+											{854, "¦¦¦НН¦¦¦0"},
+											{856, "¦¦¦Н¦¦¦0"},
+											{863, "¦¦¦СУМ_КП_Н¦¦¦0"},
+											{864, "¦¦¦СУМ_НН¦¦¦0"},
+											{875, "¦¦¦RП_П¦¦¦0"} };
 
 
-	}
 
 	// CreateConsole();
 
@@ -280,12 +275,9 @@ extern "C" void __stdcall Hello(void)
 	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_Татнефть$\\Подсчет запасов\\Тест\\автозагрузка\\папка";
 	// int count = 0;
 
-
-	//������ �������
-	std::vector<std::string> arrWells;
-	while (std::getline(data, line))
+	for (int i = 0; i < arrWells.size(); i++)
 	{
-		arrWells.push_back(line);
+		std::cout << arrWells[i] << std::endl;
 	}
 
 	for (auto& p : fs::directory_iterator(path))
@@ -316,7 +308,6 @@ extern "C" void __stdcall Hello(void)
 
 						//������
 						GetArrayByName(&ArrHandle, "VIEWCURVES", ObjHandle);
-						logError << ArrayGetLen(ArrHandle) << ";";
 						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
 						{
 							GetArraySingle(ArrHandle, i, "Ident", &li);
@@ -340,7 +331,6 @@ extern "C" void __stdcall Hello(void)
 
 						//�������
 						GetArrayByName(&ArrHandle, "ViewInterTowers", ObjHandle);
-						logError << ArrayGetLen(ArrHandle) << ";";
 						for (long i = 0; i < ArrayGetLen(ArrHandle); i++)
 						{
 							GetArraySingle(ArrHandle, i, "Ident", &li);
@@ -377,7 +367,6 @@ extern "C" void __stdcall Hello(void)
 						GetArrayByName(&ArrHandle, "ИНТ_ОПР_ЗАКР", ObjHandle);
 						long count_opr = ArrayGetLen(ArrHandle);
 
-						logError << count_perf << ";" << count_opr << ";";
 
 						DoneHandle(&ArrHandle);
 						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
@@ -438,7 +427,6 @@ extern "C" void __stdcall Hello(void)
 						DoneHandle(&LRHandle);
 						DoneHandle(&LFHandle);
 
-						logError << std::endl;
 					}
 				}
 			}
