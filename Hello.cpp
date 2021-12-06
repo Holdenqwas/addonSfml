@@ -13,9 +13,9 @@
 #include <map>
 #include <vector>
 
-#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid.hpp>			  // uuid class
 #include <boost/uuid/uuid_generators.hpp> // generators
-#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <boost/uuid/uuid_io.hpp>		  // streaming operators etc.
 #include <algorithm>
 
 #include <sstream>
@@ -33,7 +33,7 @@ void CreateConsole()
 	}
 
 	// std::cout, std::clog, std::cerr, std::cin
-	FILE* fDummy;
+	FILE *fDummy;
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
@@ -52,10 +52,49 @@ extern "C" void __stdcall Hello(void)
 
 	// Variables
 	std::string path;
-	std::vector <std::string> arrWells;
+	std::vector<std::string> arrWells;
+	std::map<int, char *> fullObj = {{649, "¦¦¦¦КП¦¦0"},
+									 {651, "¦¦¦¦КГЛ¦¦0"},
+									 {652, "¦¦¦¦КНГ¦¦0"},
+									 {659, "¦¦¦¦АГК¦¦0"},
+									 {660, "¦¦¦¦АНГК¦¦0"},
+									 {664, "¦¦¦АГК_П¦¦¦0"},
+									 {665, "¦¦¦КГЛ_П¦¦¦0"},
+									 {666, "¦¦¦АНГК_П¦¦¦0"},
+									 {715, "¦¦¦¦КПР¦¦0"},
+									 {716, "¦¦¦КПР_П¦¦¦0"},
+									 {814, "¦¦¦КП_П¦¦¦0"},
+									 {815, "¦¦¦КНГ_П¦¦¦0"},
+									 {850, "¦¦¦КП_Н¦¦¦0"},
+
+									 {852, "¦¦¦КПСР¦¦¦0"},
+									 {854, "¦¦¦НН¦¦¦0"},
+									 {856, "¦¦¦Н¦¦¦0"},
+									 {863, "¦¦¦СУМ_КП_Н¦¦¦0"},
+									 {864, "¦¦¦СУМ_НН¦¦¦0"},
+									 {875, "¦¦¦RП_П¦¦¦0"}};
+
+	std::map<int, char *> fullTower = {{818, "¦¦¦КПСР¦¦¦0"},
+									 {823, "¦¦¦КП_Н¦¦¦0"},
+									 {825, "¦¦¦RП_П¦¦¦0"},
+									 {827, "¦¦¦КП_П¦¦¦0"},
+									 {828, "¦¦¦КНГ_П¦¦¦0"},
+									 {849, "¦¦¦НН¦¦¦0"},
+									 {855, "¦¦¦Н¦¦¦0"}};
+	std::map<int, char *> mapCurve;
+	std::map<int, char *> mapTower;
+	std::map<int, char *>::iterator it;
 
 	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
 	namespace fs = std::filesystem;
+
+	// Flags
+	bool reloadPerf = false;
+	bool reloadTest = false;
+	bool reloadPZ = false;
+	bool reloadRigis = false;
+	std::string reloadPerfStart;
+	std::string reloadTestStart;
 
 	// App
 	sf::RenderWindow window(sf::VideoMode(600, 500), "Autoreload");
@@ -162,13 +201,13 @@ extern "C" void __stdcall Hello(void)
 			}
 			path = editPath.process(event);
 			arrWells = list.process(event);
-			editPz.process(event);
-			editRigis.process(event);
+			reloadPZ = editPz.process(event);
+			reloadRigis = editRigis.process(event);
 			editIndex.process(event);
-			editPerf.process(event);
-			perfStart.process(event);
-			editTest.process(event);
-			testStart.process(event);
+			reloadPerf = editPerf.process(event);
+			reloadPerfStart = perfStart.process(event);
+			reloadTest = editTest.process(event);
+			reloadTestStart = testStart.process(event);
 
 			editKS.process(event);
 			editPS.process(event);
@@ -237,38 +276,6 @@ extern "C" void __stdcall Hello(void)
 	char alt[100] = "";
 	float li = 0;
 
-	std::map<int, char*>::iterator it;
-
-	std::map <int, char*> choices_col = { {818, "¦¦¦КПСР¦¦¦0"},
-										{823, "¦¦¦КП_Н¦¦¦0" },
-										{825, "¦¦¦RП_П¦¦¦0"},
-										{827, "¦¦¦КП_П¦¦¦0"},
-										{828, "¦¦¦КНГ_П¦¦¦0"},
-										{849, "¦¦¦НН¦¦¦0"},
-										{855, "¦¦¦Н¦¦¦0"} };
-
-	std::map <int, char*> choices = { {649, "¦¦¦¦КП¦¦0"},
-											{651, "¦¦¦¦КГЛ¦¦0"},
-											{652, "¦¦¦¦КНГ¦¦0"},
-											{659, "¦¦¦¦АГК¦¦0"},
-											{660, "¦¦¦¦АНГК¦¦0"},
-											{664, "¦¦¦АГК_П¦¦¦0"},
-											{665, "¦¦¦КГЛ_П¦¦¦0"},
-											{666, "¦¦¦АНГК_П¦¦¦0"},
-											{715, "¦¦¦¦КПР¦¦0"},
-											{716, "¦¦¦КПР_П¦¦¦0"},
-											{814, "¦¦¦КП_П¦¦¦0"},
-											{815, "¦¦¦КНГ_П¦¦¦0"},
-											{850, "¦¦¦КП_Н¦¦¦0"},
-											{852, "¦¦¦КПСР¦¦¦0"},
-											{854, "¦¦¦НН¦¦¦0"},
-											{856, "¦¦¦Н¦¦¦0"},
-											{863, "¦¦¦СУМ_КП_Н¦¦¦0"},
-											{864, "¦¦¦СУМ_НН¦¦¦0"},
-											{875, "¦¦¦RП_П¦¦¦0"} };
-
-
-
 	// CreateConsole();
 
 	//��� ������������
@@ -280,13 +287,45 @@ extern "C" void __stdcall Hello(void)
 		std::cout << arrWells[i] << std::endl;
 	}
 
-	for (auto& p : fs::directory_iterator(path))
+	if (reloadPZ)
 	{
+		mapTower.insert(std::pair<int, char *>(818, "¦¦¦КПСР¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(823, "¦¦¦КП_Н¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(825, "¦¦¦RП_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(827, "¦¦¦КП_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(828, "¦¦¦КНГ_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(849, "¦¦¦НН¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(855, "¦¦¦Н¦¦¦0"));
 
+		mapCurve.insert(std::pair<int, char *>(852, "¦¦¦КПСР¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(854, "¦¦¦НН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(856, "¦¦¦Н¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(863, "¦¦¦СУМ_КП_Н¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(864, "¦¦¦СУМ_НН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(875, "¦¦¦RП_П¦¦¦0"));
+	}
+
+	if (reloadRigis)
+	{
+		mapCurve.insert(std::pair<int, char *>(649, "¦¦¦¦КП¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(651, "¦¦¦¦КГЛ¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(652, "¦¦¦¦КНГ¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(659, "¦¦¦¦АГК¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(660, "¦¦¦¦АНГК¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(664, "¦¦¦АГК_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(665, "¦¦¦КГЛ_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(666, "¦¦¦АНГК_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(715, "¦¦¦¦КПР¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(716, "¦¦¦КПР_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(814, "¦¦¦КП_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(815, "¦¦¦КНГ_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(850, "¦¦¦КП_Н¦¦¦0"));
+	}
+	for (auto &p : fs::directory_iterator(path))
+	{
 		// auto start = std::chrono::system_clock::now();
 
-		// std::cout << p.path() << std::endl;
-		for (auto& file : fs::directory_iterator(p.path()))
+		for (auto &file : fs::directory_iterator(p.path()))
 		{
 			std::string path2 = file.path().string();
 
@@ -295,7 +334,6 @@ extern "C" void __stdcall Hello(void)
 				std::string name_plan = file.path().stem().string();
 				for (int i = 0; i < arrWells.size(); i++)
 				{
-
 
 					if (arrWells[i] == name_plan)
 					{
@@ -312,8 +350,8 @@ extern "C" void __stdcall Hello(void)
 						{
 							GetArraySingle(ArrHandle, i, "Ident", &li);
 
-							it = choices.find(li);
-							if (it != choices.end())
+							it = mapCurve.find(li);
+							if (it != mapCurve.end())
 							{
 								boost::uuids::random_generator uuid_gen;
 								boost::uuids::uuid u = uuid_gen();
@@ -335,8 +373,8 @@ extern "C" void __stdcall Hello(void)
 						{
 							GetArraySingle(ArrHandle, i, "Ident", &li);
 
-							it = choices_col.find(li);
-							if (it != choices_col.end())
+							it = mapTower.find(li);
+							if (it != mapTower.end())
 							{
 								boost::uuids::random_generator uuid_gen;
 								boost::uuids::uuid u = uuid_gen();
@@ -367,7 +405,6 @@ extern "C" void __stdcall Hello(void)
 						GetArrayByName(&ArrHandle, "ИНТ_ОПР_ЗАКР", ObjHandle);
 						long count_opr = ArrayGetLen(ArrHandle);
 
-
 						DoneHandle(&ArrHandle);
 						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
@@ -378,7 +415,7 @@ extern "C" void __stdcall Hello(void)
 						std::string tmp;
 						std::string tmp_counter;
 
-						if (count_perf)
+						if (reloadPerf && count_perf)
 						{
 							for (int i = 0; i < count_perf; i++)
 							{
@@ -387,7 +424,7 @@ extern "C" void __stdcall Hello(void)
 								xPutArrayString(ArrHandle, i, "Ident", tmp_counter.c_str());
 								xPutArrayString(ArrHandle, i, "Owner", "-1");
 								xPutArrayString(ArrHandle, i, "State", "0");
-								xPutArrayString(ArrHandle, i, "Start", "1433");
+								xPutArrayString(ArrHandle, i, "Start", reloadPerfStart);
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
 								xPutArrayString(ArrHandle, i, "ArrayName", "ПЕРФОРАЦИЯ_ФАКТИЧЕСК");
@@ -398,7 +435,7 @@ extern "C" void __stdcall Hello(void)
 							}
 						}
 
-						if (count_opr)
+						if (reloadTest && count_opr)
 						{
 							int pos_opr = 0;
 							for (int i = (count_perf ? count_perf : 0); i < count_opr + (count_perf ? count_perf : 0); i++)
@@ -408,7 +445,7 @@ extern "C" void __stdcall Hello(void)
 								xPutArrayString(ArrHandle, i, "Ident", tmp_counter.c_str());
 								xPutArrayString(ArrHandle, i, "Owner", "-1");
 								xPutArrayString(ArrHandle, i, "State", "0");
-								xPutArrayString(ArrHandle, i, "Start", "1580");
+								xPutArrayString(ArrHandle, i, "Start", reloadTestStart);
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
 								xPutArrayString(ArrHandle, i, "ArrayName", "ИНТ_ОПР_ЗАКР");
@@ -426,7 +463,6 @@ extern "C" void __stdcall Hello(void)
 						DoneHandle(&ObjHandle);
 						DoneHandle(&LRHandle);
 						DoneHandle(&LFHandle);
-
 					}
 				}
 			}
@@ -450,26 +486,26 @@ extern "C" void __stdcall Hello(void)
 
 } // Hello01
 
-const char* CopyrightMessage = "Библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
+const char *CopyrightMessage = "Библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
 
-extern "C" const char* __stdcall PrimeLibraryCopyright(void)
+extern "C" const char *__stdcall PrimeLibraryCopyright(void)
 {
 	return CopyrightMessage;
 }
 
-const char* ExportedFunctions[] =
-{
-	"Hello\rЗагрузить колонки и примитивы\rПерезагружает кривые",
-	NULL };
+const char *ExportedFunctions[] =
+	{
+		"Hello\rЗагрузить колонки и примитивы\rПерезагружает кривые",
+		NULL};
 
-extern "C" const char** __stdcall PrimeExportedFunctions(void)
+extern "C" const char **__stdcall PrimeExportedFunctions(void)
 {
 	return ExportedFunctions;
 }
 
-const char* Version = "01.00.00.0021";
+const char *Version = "01.00.00.0021";
 
-extern "C" const char* __stdcall PrimeLibraryVersion(void)
+extern "C" const char *__stdcall PrimeLibraryVersion(void)
 {
 	return Version;
 }
