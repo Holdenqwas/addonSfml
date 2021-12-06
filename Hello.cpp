@@ -1,13 +1,25 @@
-#include <iostream>
-//#include <string>
-
-//#include <fstream>
-
-#include "Form.h"
-
 #include "DSAPI.h"
 #include "DSExt.h"
 #include "PrimeAPI.h"
+#include <windows.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <commdlg.h>
+#include <iostream>
+#include <string>
+#include <filesystem>
+#include <fstream>
+#include <map>
+
+#include <boost/uuid/uuid.hpp>            // uuid class
+#include <boost/uuid/uuid_generators.hpp> // generators
+#include <boost/uuid/uuid_io.hpp>         // streaming operators etc.
+#include <algorithm>
+
+#include <sstream>
+
+#include "Form.h"
 
 void CreateConsole()
 {
@@ -20,7 +32,7 @@ void CreateConsole()
 	}
 
 	// std::cout, std::clog, std::cerr, std::cin
-	FILE *fDummy;
+	FILE* fDummy;
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
@@ -224,49 +236,51 @@ extern "C" void __stdcall Hello(void)
 	char alt[100] = "";
 	float li = 0;
 
-	std::map<int, char *>::iterator it;
+	std::map<int, char*>::iterator it;
 
 	void reloadColl()
 	{
-		std::map<int, char *> choices_col = {{818, "������Ц��0"},
-											 {823, "�����_ͦ��0"},
-											 {825, "���R�_Ϧ��0"},
-											 {827, "�����_Ϧ��0"},
-											 {828, "������_Ϧ��0"},
-											 {849, "����ͦ��0"},
-											 {855, "���ͦ��0"}};
+		std::map <int, char*> choices_col = { {818, "¦¦¦КПСР¦¦¦0"},
+											{823, "¦¦¦КП_Н¦¦¦0" },
+											{825, "¦¦¦RП_П¦¦¦0"},
+											{827, "¦¦¦КП_П¦¦¦0"},
+											{828, "¦¦¦КНГ_П¦¦¦0"},
+											{849, "¦¦¦НН¦¦¦0"},
+											{855, "¦¦¦Н¦¦¦0"} };
 	}
 
 	void reloadCurve()
 	{
-		std::map<int, char *> choices = {{649, "�����Ϧ�0"},
-										 {651, "������˦�0"},
-										 {652, "������æ�0"},
-										 {659, "������ʦ�0"},
-										 {660, "�������ʦ�0"},
-										 {664, "������_Ϧ��0"},
-										 {665, "������_Ϧ��0"},
-										 {666, "�������_Ϧ��0"},
-										 {715, "������Ц�0"},
-										 {716, "������_Ϧ��0"},
-										 {814, "�����_Ϧ��0"},
-										 {815, "������_Ϧ��0"},
-										 {850, "�����_ͦ��0"},
-										 {852, "������Ц��0"},
-										 {854, "����ͦ��0"},
-										 {856, "���ͦ��0"},
-										 {863, "������_��_ͦ��0"},
-										 {864, "������_�ͦ��0"},
-										 {875, "���R�_Ϧ��0"}};
+		std::map <int, char*> choices = { {649, "¦¦¦¦КП¦¦0"},
+												{651, "¦¦¦¦КГЛ¦¦0"},
+												{652, "¦¦¦¦КНГ¦¦0"},
+												{659, "¦¦¦¦АГК¦¦0"},
+												{660, "¦¦¦¦АНГК¦¦0"},
+												{664, "¦¦¦АГК_П¦¦¦0"},
+												{665, "¦¦¦КГЛ_П¦¦¦0"},
+												{666, "¦¦¦АНГК_П¦¦¦0"},
+												{715, "¦¦¦¦КПР¦¦0"},
+												{716, "¦¦¦КПР_П¦¦¦0"},
+												{814, "¦¦¦КП_П¦¦¦0"},
+												{815, "¦¦¦КНГ_П¦¦¦0"},
+												{850, "¦¦¦КП_Н¦¦¦0"},
+												{852, "¦¦¦КПСР¦¦¦0"},
+												{854, "¦¦¦НН¦¦¦0"},
+												{856, "¦¦¦Н¦¦¦0"},
+												{863, "¦¦¦СУМ_КП_Н¦¦¦0"},
+												{864, "¦¦¦СУМ_НН¦¦¦0"},
+												{875, "¦¦¦RП_П¦¦¦0"} };
+
+
 	}
 
 	// CreateConsole();
- 
+
 	//��� ������������
-	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_��������$\\������� �������\\����\\������������\\�����";
+	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_Татнефть$\\Подсчет запасов\\Тест\\автозагрузка\\папка";
 	// int count = 0;
 
-	
+
 	//������ �������
 	std::vector<std::string> arrWells;
 	while (std::getline(data, line))
@@ -274,29 +288,29 @@ extern "C" void __stdcall Hello(void)
 		arrWells.push_back(line);
 	}
 
-	for (auto &p : fs::directory_iterator(path))
+	for (auto& p : fs::directory_iterator(path))
 	{
-		//��� �������� �������
+
 		// auto start = std::chrono::system_clock::now();
 
 		// std::cout << p.path() << std::endl;
-		for (auto &file : fs::directory_iterator(p.path()))
+		for (auto& file : fs::directory_iterator(p.path()))
 		{
 			std::string path2 = file.path().string();
 
 			if (path2.substr(path2.length() - 2) == "WS" || path2.substr(path2.length() - 2) == "ws")
 			{
 				std::string name_plan = file.path().stem().string();
-				for (int i = 0; i < parsedCsv.size(); i++)
+				for (int i = 0; i < arrWells.size(); i++)
 				{
 
-					//���� ��� �������� ���� � ������ csv
+
 					if (arrWells[i] == name_plan)
 					{
 						// std::cout << "�����" << std::endl;
 						SysLFInitOpen(path2.c_str(), &LFHandle);
 
-						Get_Table("�������", LFHandle, &LRHandle);
+						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 
@@ -352,21 +366,21 @@ extern "C" void __stdcall Hello(void)
 						DoneHandle(&ObjHandle);
 						DoneHandle(&LRHandle);
 						//����������
-						Get_Table("���������_���������", LFHandle, &LRHandle);
+						Get_Table("ПРИМИТИВЫ_ИНТЕРВАЛА", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 						DoneHandle(&ArrHandle);
-						GetArrayByName(&ArrHandle, "����������_���������", ObjHandle);
+						GetArrayByName(&ArrHandle, "ПЕРФОРАЦИЯ_ФАКТИЧЕСК", ObjHandle);
 						long count_perf = ArrayGetLen(ArrHandle);
 
 						DoneHandle(&ArrHandle);
-						GetArrayByName(&ArrHandle, "���_���_����", ObjHandle);
+						GetArrayByName(&ArrHandle, "ИНТ_ОПР_ЗАКР", ObjHandle);
 						long count_opr = ArrayGetLen(ArrHandle);
 
 						logError << count_perf << ";" << count_opr << ";";
 
 						DoneHandle(&ArrHandle);
-						Get_Table("�������", LFHandle, &LRHandle);
+						Get_Table("ПЛАНШЕТ", LFHandle, &LRHandle);
 						Goto_BeginObj(LRHandle);
 						GetCurObj(LRHandle, &ObjHandle);
 
@@ -387,7 +401,7 @@ extern "C" void __stdcall Hello(void)
 								xPutArrayString(ArrHandle, i, "Start", "1433");
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
-								xPutArrayString(ArrHandle, i, "ArrayName", "����������_���������");
+								xPutArrayString(ArrHandle, i, "ArrayName", "ПЕРФОРАЦИЯ_ФАКТИЧЕСК");
 								tmp_counter = std::to_string(i);
 								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
 
@@ -408,7 +422,7 @@ extern "C" void __stdcall Hello(void)
 								xPutArrayString(ArrHandle, i, "Start", "1580");
 								xPutArrayString(ArrHandle, i, "Width", "50");
 								xPutArrayString(ArrHandle, i, "Color", "0");
-								xPutArrayString(ArrHandle, i, "ArrayName", "���_���_����");
+								xPutArrayString(ArrHandle, i, "ArrayName", "ИНТ_ОПР_ЗАКР");
 								tmp_counter = std::to_string(pos_opr);
 								xPutArrayString(ArrHandle, i, "ArrayRow", tmp_counter.c_str());
 
@@ -441,33 +455,33 @@ extern "C" void __stdcall Hello(void)
 	}
 
 	// std::cout << "Done " << std::endl;
-	logError.close();
+
 	// CreateConsole();
 
 	// std::cout << "Done."<< std::endl;
 
 } // Hello01
 
-const char *CopyrightMessage = "����������� ���������� ��� ������� \"�����\"\r(c) 2021 ����� ����";
+const char* CopyrightMessage = "Библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
 
-extern "C" const char *__stdcall PrimeLibraryCopyright(void)
+extern "C" const char* __stdcall PrimeLibraryCopyright(void)
 {
 	return CopyrightMessage;
 }
 
-const char *ExportedFunctions[] =
-	{
-		"Hello\r��������� ������\r������ ������ �� ������������",
-		NULL};
+const char* ExportedFunctions[] =
+{
+	"Hello\rЗагрузить колонки и примитивы\rПерезагружает кривые",
+	NULL };
 
-extern "C" const char **__stdcall PrimeExportedFunctions(void)
+extern "C" const char** __stdcall PrimeExportedFunctions(void)
 {
 	return ExportedFunctions;
 }
 
-const char *Version = "01.00.00.0021";
+const char* Version = "01.00.00.0021";
 
-extern "C" const char *__stdcall PrimeLibraryVersion(void)
+extern "C" const char* __stdcall PrimeLibraryVersion(void)
 {
 	return Version;
 }
