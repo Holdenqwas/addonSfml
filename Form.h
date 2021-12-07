@@ -23,8 +23,7 @@ private:
     sf::Text text;
     sf::Font font;
     sf::Color c;
-    sf::Texture texture;
-    sf::Sprite sprite;
+	sf::RectangleShape rect;
 };
 
 class TextEdit

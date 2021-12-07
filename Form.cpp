@@ -11,10 +11,14 @@ Button::Button(std::string str, std::string fontPath, int size, sf::Color clr)
     text.setCharacterSize(size);
     text.setFillColor(clr);
     c = clr;
-    texture.loadFromFile("./resurses/button.png");
-    sprite.setTexture(texture);
-    font.loadFromFile(fontPath);
+	rect = sf::RectangleShape(sf::Vector2f(80, 25));
+    rect.setFillColor(sf::Color::White);
+    rect.setOutlineThickness(1);
+    rect.setOutlineColor(HOWER);
+	font.loadFromFile(fontPath);
     text.setFont(font);
+    text.setCharacterSize(size);
+    text.setFillColor(clr);
 }
 
 void Button::setString(sf::String str)
@@ -38,14 +42,14 @@ void Button::setPosition(sf::Vector2f pos)
     float width = text.getLocalBounds().width;
     if (width > 70)
     {
-        sprite.setScale((width + 20) / 80, 1);
+        rect.setScale((width + 20) / 80, 1);
         text.setPosition(sf::Vector2f(pos.x + 10, pos.y + 2));
     }
     else
     {
         text.setPosition(sf::Vector2f(pos.x + ((80 - width) / 2), pos.y + 2));
     }
-    sprite.setPosition(pos);
+    rect.setPosition(pos);
 }
 
 void Button::setSize(int sz)
@@ -57,16 +61,16 @@ bool Button::process(sf::Event ev)
 {
     if (ev.type == sf::Event::MouseMoved)
     {
-        bool flag = sprite.getGlobalBounds()
+        bool flag = rect.getGlobalBounds()
                         .contains(sf::Vector2f(ev.mouseMove.x, ev.mouseMove.y));
 
-        sprite.setColor(flag ? HOWER : sf::Color(255, 255, 255, 255));
+        rect.setFillColor(flag ? HOWER : sf::Color(255, 255, 255, 255));
         return false;
     }
 
     if (ev.type == sf::Event::MouseButtonReleased)
     {
-        bool flag = sprite.getGlobalBounds()
+        bool flag = rect.getGlobalBounds()
                         .contains(sf::Vector2f(ev.mouseButton.x, ev.mouseButton.y));
         return flag;
     }
@@ -76,7 +80,7 @@ bool Button::process(sf::Event ev)
 
 void Button::render(sf::RenderWindow &wnd)
 {
-    wnd.draw(sprite);
+    wnd.draw(rect);
     wnd.draw(text);
 }
 
