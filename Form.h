@@ -111,9 +111,9 @@ private:
 	std::vector<std::string> arrStr;
 	sf::RectangleShape rect;
 	std::vector<Text*> vector;
-	Button addButton = Button("Add");
-	Button delButton = Button("Delete all");
-	Button prevButton = Button("<<");
-	Button nextButton = Button(">>");
+	Button addButton = Button("Add", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+	Button delButton = Button("Delete all", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+	Button prevButton = Button("<<", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
+	Button nextButton = Button(">>", "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf");
 };
 #endif // !FORM

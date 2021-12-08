@@ -20,6 +20,10 @@
 
 //#include <sstream>
 
+// 2 модуля для wstring
+#include <locale>
+#include <codecvt>
+
 #include "Form.h"
 
 void CreateConsole()
@@ -33,7 +37,7 @@ void CreateConsole()
 	}
 
 	// std::cout, std::clog, std::cerr, std::cin
-	FILE* fDummy;
+	FILE *fDummy;
 	freopen_s(&fDummy, "CONOUT$", "w", stdout);
 	freopen_s(&fDummy, "CONOUT$", "w", stderr);
 	freopen_s(&fDummy, "CONIN$", "r", stdin);
@@ -52,9 +56,9 @@ extern "C" void __stdcall Hello(void)
 
 	// Variables
 	sf::String pathStr;
-	//std::string path;
+	// std::string path;
 	std::vector<std::string> arrWells;
-	std::map<int, char*> fullObj = { {649, "¦¦¦¦КП¦¦0"},
+	std::map<int, char *> fullObj = {{649, "¦¦¦¦КП¦¦0"},
 									 {651, "¦¦¦¦КГЛ¦¦0"},
 									 {652, "¦¦¦¦КНГ¦¦0"},
 									 {659, "¦¦¦¦АГК¦¦0"},
@@ -73,18 +77,18 @@ extern "C" void __stdcall Hello(void)
 									 {856, "¦¦¦Н¦¦¦0"},
 									 {863, "¦¦¦СУМ_КП_Н¦¦¦0"},
 									 {864, "¦¦¦СУМ_НН¦¦¦0"},
-									 {875, "¦¦¦RП_П¦¦¦0"} };
+									 {875, "¦¦¦RП_П¦¦¦0"}};
 
-	std::map<int, char*> fullTower = { {818, "¦¦¦КПСР¦¦¦0"},
-									 {823, "¦¦¦КП_Н¦¦¦0"},
-									 {825, "¦¦¦RП_П¦¦¦0"},
-									 {827, "¦¦¦КП_П¦¦¦0"},
-									 {828, "¦¦¦КНГ_П¦¦¦0"},
-									 {849, "¦¦¦НН¦¦¦0"},
-									 {855, "¦¦¦Н¦¦¦0"} };
-	std::map<int, char*> mapCurve;
-	std::map<int, char*> mapTower;
-	std::map<int, char*>::iterator it;
+	std::map<int, char *> fullTower = {{818, "¦¦¦КПСР¦¦¦0"},
+									   {823, "¦¦¦КП_Н¦¦¦0"},
+									   {825, "¦¦¦RП_П¦¦¦0"},
+									   {827, "¦¦¦КП_П¦¦¦0"},
+									   {828, "¦¦¦КНГ_П¦¦¦0"},
+									   {849, "¦¦¦НН¦¦¦0"},
+									   {855, "¦¦¦Н¦¦¦0"}};
+	std::map<int, char *> mapCurve;
+	std::map<int, char *> mapTower;
+	std::map<int, char *>::iterator it;
 
 	OType LFHandle, LRHandle, ObjHandle, ArrHandle, THandle = hNil;
 	namespace fs = std::filesystem;
@@ -324,7 +328,7 @@ extern "C" void __stdcall Hello(void)
 	CreateConsole();
 
 	//��� ������������
-	//std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_Татнефть$\\Подсчет запасов\\Тест\\автозагрузка\\папка";
+	// std::string path = "\\\\PRIME.ec.tatneft.ru\\Prime_Татнефть$\\Подсчет запасов\\Тест\\автозагрузка\\папка";
 	// int count = 0;
 
 	for (int i = 0; i < arrWells.size(); i++)
@@ -334,66 +338,70 @@ extern "C" void __stdcall Hello(void)
 
 	if (reloadPZ)
 	{
-		mapTower.insert(std::pair<int, char*>(818, "¦¦¦КПСР¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(818, "¦¦¦КНСР¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(823, "¦¦¦КП_Н¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(825, "¦¦¦RП_П¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(826, "¦¦¦КН_Н_КП¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(827, "¦¦¦КП_П¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(828, "¦¦¦КНГ_П¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(849, "¦¦¦НН¦¦¦0"));
-		mapTower.insert(std::pair<int, char*>(855, "¦¦¦Н¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(818, "¦¦¦КПСР¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(818, "¦¦¦КНСР¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(823, "¦¦¦КП_Н¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(825, "¦¦¦RП_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(826, "¦¦¦КН_Н_КП¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(827, "¦¦¦КП_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(828, "¦¦¦КНГ_П¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(849, "¦¦¦НН¦¦¦0"));
+		mapTower.insert(std::pair<int, char *>(855, "¦¦¦Н¦¦¦0"));
 
-		mapCurve.insert(std::pair<int, char*>(852, "¦¦¦КПСР¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(854, "¦¦¦НН¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(856, "¦¦¦Н¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(863, "¦¦¦СУМ_КП_Н¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(864, "¦¦¦СУМ_НН¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(875, "¦¦¦RП_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(867, "¦¦¦СУМ_КП_Н_ЧН¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(862, "¦¦¦СУМ_КН_Н_КП¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(868, "¦¦¦КП_Н_ЧН¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(853, "¦¦¦КНСР¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(852, "¦¦¦КПСР¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(854, "¦¦¦НН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(856, "¦¦¦Н¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(863, "¦¦¦СУМ_КП_Н¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(864, "¦¦¦СУМ_НН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(875, "¦¦¦RП_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(867, "¦¦¦СУМ_КП_Н_ЧН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(862, "¦¦¦СУМ_КН_Н_КП¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(868, "¦¦¦КП_Н_ЧН¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(853, "¦¦¦КНСР¦¦¦0"));
 	}
 	std::cout << "Создал пз" << std::endl;
 	if (reloadRigis)
 	{
-		mapCurve.insert(std::pair<int, char*>(649, "¦¦¦¦КП¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(651, "¦¦¦¦КГЛ¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(652, "¦¦¦¦КНГ¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(659, "¦¦¦¦АГК¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(660, "¦¦¦¦АНГК¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(664, "¦¦¦АГК_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(665, "¦¦¦КГЛ_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(666, "¦¦¦АНГК_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(715, "¦¦¦¦КПР¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(716, "¦¦¦КПР_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(814, "¦¦¦КП_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(815, "¦¦¦КНГ_П¦¦¦0"));
-		mapCurve.insert(std::pair<int, char*>(850, "¦¦¦КП_Н¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(649, "¦¦¦¦КП¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(651, "¦¦¦¦КГЛ¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(652, "¦¦¦¦КНГ¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(659, "¦¦¦¦АГК¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(660, "¦¦¦¦АНГК¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(664, "¦¦¦АГК_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(665, "¦¦¦КГЛ_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(666, "¦¦¦АНГК_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(715, "¦¦¦¦КПР¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(716, "¦¦¦КПР_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(814, "¦¦¦КП_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(815, "¦¦¦КНГ_П¦¦¦0"));
+		mapCurve.insert(std::pair<int, char *>(850, "¦¦¦КП_Н¦¦¦0"));
 	}
 	std::cout << "Создал ригис" << std::endl;
-	std::cout << "Это путь " << pathStr.toWideString().c_str() << std::endl;
-	std::string path(pathStr);
+	using convert_type = std::codecvt_utf8<wchar_t>;
+	std::wstring_convert<convert_type, wchar_t> converter;
+
+	// use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
+	std::string path = converter.to_bytes(pathStr.toWideString());
+	std::cout << "Это путь " << path << std::endl;
 	std::cout << "Это " << fs::is_directory(path) << std::endl;
-	
+
 	if (fs::is_directory(path))
 	{
 		//Подсчет общего колличества папок
-		for (auto& p : fs::directory_iterator(path))
+		for (auto &p : fs::directory_iterator(path))
 		{
 			countFolder++;
 		}
 		std::cout << "Всего папок :" << countFolder << std::endl;
 		StartProcess("Перезагрузка данных, пожалуйста, ожидайте...");
 
-		for (auto& p : fs::directory_iterator(path))
+		for (auto &p : fs::directory_iterator(path))
 		{
 			StepProcess(1, curFolder, countFolder);
 			// auto start = std::chrono::system_clock::now();
 			if (fs::is_directory(p.path()))
 			{
-				for (auto& file : fs::directory_iterator(p.path()))
+				for (auto &file : fs::directory_iterator(p.path()))
 				{
 					std::string path2 = file.path().string();
 
@@ -553,27 +561,26 @@ extern "C" void __stdcall Hello(void)
 	StopProcess();
 } // Hello01
 
+const char *CopyrightMessage = "Библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
 
-const char* CopyrightMessage = "Библиотека для системы \"Прайм\"\r(c) 2021 Антон Хорн";
-
-extern "C" const char* __stdcall PrimeLibraryCopyright(void)
+extern "C" const char *__stdcall PrimeLibraryCopyright(void)
 {
 	return CopyrightMessage;
 }
 
-const char* ExportedFunctions[] =
-{
-	"Hello\rЗагрузить колонки и примитивы\rПерезагружает кривые",
-	NULL };
+const char *ExportedFunctions[] =
+	{
+		"Hello\rЗагрузить колонки и примитивы\rПерезагружает кривые",
+		NULL};
 
-extern "C" const char** __stdcall PrimeExportedFunctions(void)
+extern "C" const char **__stdcall PrimeExportedFunctions(void)
 {
 	return ExportedFunctions;
 }
 
-const char* Version = "01.00.00.0021";
+const char *Version = "01.00.00.0021";
 
-extern "C" const char* __stdcall PrimeLibraryVersion(void)
+extern "C" const char *__stdcall PrimeLibraryVersion(void)
 {
 	return Version;
 }

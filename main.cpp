@@ -1,6 +1,10 @@
 #include <SFML/Graphics.hpp>
 #include "Form.h"
-
+#include <iostream>
+/*
+#include <locale>
+#include <codecvt>
+*/
 int main()
 {
     std::string pathFont = "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf";
@@ -10,7 +14,7 @@ int main()
     // left block
     Text editPathText("Input work directory:", pathFont);
     editPathText.setPosition(sf::Vector2f(30, 30));
-    
+
     TextEdit editPath(170, pathFont);
     editPath.setPosition(sf::Vector2f(30, 70));
 
@@ -97,6 +101,8 @@ int main()
     Button startProcess("Start", pathFont);
     startProcess.setPosition(sf::Vector2f(480, 450));
 
+    sf::String path;
+    std::wstring p;
     while (window.isOpen())
     {
         sf::Event event;
@@ -106,7 +112,7 @@ int main()
             {
                 window.close();
             }
-            editPath.process(event);
+            path = editPath.process(event);
             list.process(event);
             editPz.process(event);
             editRigis.process(event);
@@ -171,6 +177,13 @@ int main()
         startProcess.render(window);
 
         window.display();
+/*
+        using convert_type = std::codecvt_utf8<wchar_t>;
+        std::wstring_convert<convert_type, wchar_t> converter;
+
+        // use converter (.to_bytes: wstr->str, .from_bytes: str->wstr)
+        std::string converted_str = converter.to_bytes(path.toWideString());
+*/
     }
 
     return 0;

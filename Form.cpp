@@ -372,7 +372,7 @@ std::vector<std::string> ListText::process(sf::Event ev)
 	{
 		del = true;
 	}
-	if (prevButton.process(ev))
+	if (prevButton.process(ev) && curr > 0)
 	{
 		for (int i = 0; i < vector.size(); i++)
 		{
@@ -380,16 +380,16 @@ std::vector<std::string> ListText::process(sf::Event ev)
 		}
 		vector.clear();
 
-		for (size_t i = curr--; vector.size() < count && curr >= 0; i--, curr--)
+		for (size_t i = --curr; vector.size() < count && curr >= 0; i--, curr--)
 		{
-			vector.insert(vector.begin(), new Text(arrStr[i]));
+			vector.insert(vector.begin(), new Text(arrStr[i], "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf"));
 		}
 		for (size_t i = 0; i < vector.size(); i++)
 		{
 			vector[i]->setPosition(sf::Vector2f(rect.getGlobalBounds().left + 10, rect.getGlobalBounds().top + i * 25 + 5));
 		}
 	}
-	if (nextButton.process(ev))
+	if (nextButton.process(ev) && curr < arrStr.size())
 	{
 		for (int i = 0; i < vector.size(); i++)
 		{
@@ -399,7 +399,7 @@ std::vector<std::string> ListText::process(sf::Event ev)
 
 		for (size_t i = 0; i < count && curr < arrStr.size(); i++, curr++)
 		{
-			vector.push_back(new Text(arrStr[curr]));
+			vector.push_back(new Text(arrStr[curr], "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf"));
 		}
 		for (size_t i = 0; i < vector.size(); i++)
 		{
@@ -421,7 +421,7 @@ std::vector<std::string> ListText::process(sf::Event ev)
 
 		for (size_t i = 0; i < count && curr < arrStr.size(); i++, curr++)
 		{
-			vector.push_back(new Text(arrStr[curr]));
+			vector.push_back(new Text(arrStr[curr], "/usr/share/fonts/truetype/ubuntu/Ubuntu-M.ttf"));
 		}
 
 		for (int i = 0; i < vector.size(); i++)
